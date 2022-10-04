@@ -62,15 +62,6 @@ Mkfile.old
 dkms.conf
 
 # Projet de test
-testproj/mymake/test/a.c
-testproj/mymake/test/a.h
-testproj/mymake/test/b.c
-testproj/mymake/test/b.h
-testproj/mymake/test/c.c
-testproj/mymake/test/c.h
-testproj/mymake/test/d.c
-testproj/mymake/test/d.h
-testproj/mymake/test/main.c
 testproj/test/a.c
 testproj/test/a.h
 testproj/test/b.c
