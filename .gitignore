@@ -1,3 +1,9 @@
+# LaTeX
+*.pdf
+*.log
+*.aux
+
+
 # Prerequisites
 *.d
 
