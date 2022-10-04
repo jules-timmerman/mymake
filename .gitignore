@@ -62,15 +62,6 @@ Mkfile.old
 dkms.conf
 
 # Projet de test
-testproj/test/a.c
-testproj/test/a.h
-testproj/test/b.c
-testproj/test/b.h
-testproj/test/c.c
-testproj/test/c.h
-testproj/test/d.c
-testproj/test/d.h
-testproj/test/main.c
 rapport.aux
 rapport.log
 rapport.synctex.gz
@@ -83,3 +74,4 @@ testproj/c.c
 testproj/c.h
 testproj/d.c
 testproj/d.h
+testproj/main.c
