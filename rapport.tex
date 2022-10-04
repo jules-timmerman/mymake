@@ -27,9 +27,9 @@
 \usepackage{tgpagella}
 
 
-\newcounter{q}[section]
-\newenvironment{q}[1][]{\refstepcounter{q}\par\medskip
-   \noindent\textbf{Question~\thesection .\theq ~ $-$} \rmfamily}{}
+\newcounter{question}[section]
+\newenvironment{question}[1][]{\refstepcounter{question}\par\medskip
+   \noindent\textbf{Question~\thequestion ~ $-$} \rmfamily}{}
 
 
 
@@ -42,6 +42,63 @@
 \begin{document}
 
 \maketitle
+
+\begin{abstract}
+ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras consectetur tincidunt magna, eu aliquam velit dapibus tristique. Nullam mattis enim ut eros gravida condimentum. Sed rutrum dictum massa sit amet mattis. Vivamus vehicula elementum mauris. Nam sodales efficitur massa eu volutpat. Nam accumsan est id lectus dictum aliquam. Nunc lobortis molestie arcu vel maximus. Vivamus neque tellus, rhoncus in justo ut, aliquam aliquet est. Suspendisse semper consequat congue. Maecenas et quam eu dolor commodo luctus. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Quisque nec diam ac sapien luctus pharetra sit amet quis arcu. Ut ut nisi malesuada, rhoncus tortor non, porttitor neque. Duis maximus ornare quam, id dictum nulla tincidunt et.
+\end{abstract}
+
+
+\begin{question}
+ Etiam est elit, commodo ac magna quis, gravida bibendum ligula. Proin in laoreet nisl. Quisque viverra nisl at nunc porttitor, auctor porta justo porttitor. Maecenas consequat vitae tellus et maximus. Donec vestibulum lectus id dapibus dictum. Sed ante risus, elementum sed faucibus vel, pellentesque nec eros.
+
+\end{question}
+
+\begin{question}
+Vivamus luctus magna nibh, non consectetur nisi ornare nec. Sed venenatis mauris non sapien maximus dictum. Vestibulum rutrum gravida tellus sed condimentum. Proin lacus lorem, convallis non lorem sed, pharetra tincidunt ipsum. Sed viverra lacus odio, sit amet ultricies felis ornare vel. Donec id urna sed arcu fringilla commodo.
+\end{question}
+
+
+
+
+\begin{thebibliography}{99}
+
+\bibitem{uniformsequences}
+  \textit{Uniform Distribution of Sequences (p.1 - 39)},
+  L. Kuipers, H. Niederreiter,
+  Wiley-interscience,
+  1974.
+
+\bibitem{dynamics}
+  \textit{A First Course in Dynamics with a Panorama of Recent Developments (p.96 - 112)},
+  Boris Hasselblatt, Anatole Katok,
+  Cambridge University Press,
+  2003.
+  
+\bibitem{michou}
+  \textit{Thèmes d'analyse (p.139 - 165)},
+  Jean-Marie Exbrayat, Michel Alessandri,
+  Masson,
+  1997.
+
+\bibitem{troisdemis}
+  \textit{La suite des puissances de 3/2},
+  F.D. et M.M.F.,
+  La Recherche,
+  2001.
+  
+\bibitem{delahaye}
+  \textit{Pourquoi la loi de Benford n'est pas mystérieuse},
+  Nicolas Gauvrit, Jean-Paul Delahaye,
+  Mathematics and social sciences, n$^\circ$182,
+  2008.
+    
+  
+\bibitem{ign}
+  \textit{Institut national de l’information géographique et forestière},\\
+  \texttt{inventaire-forestier.ign.fr/dataifn/DonneesBrutes/requetage},
+  consulté le 10 janvier 2022.
+
+\end{thebibliography}
 
 
 
