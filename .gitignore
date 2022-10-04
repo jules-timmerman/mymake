@@ -84,3 +84,11 @@ rapport.aux
 rapport.log
 rapport.synctex.gz
 rapport.pdf
+testproj/a.c
+testproj/a.h
+testproj/b.c
+testproj/b.h
+testproj/c.c
+testproj/c.h
+testproj/d.c
+testproj/d.h

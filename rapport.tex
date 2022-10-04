@@ -19,6 +19,13 @@
 \usepackage{comment}
 
 
+% Codes source
+\usepackage{listings}
+
+% Encadrés
+\usepackage{tcolorbox}
+
+
 %\renewcommand{\thesection}{\arabic{section}}
 %\renewcommand{\thesubsection}{\arabic{subsection}}
 
@@ -30,6 +37,23 @@
 \newcounter{question}[section]
 \newenvironment{question}[1][]{\refstepcounter{question}\par\medskip
    \noindent\textbf{Question~\thequestion ~ $-$} \rmfamily}{}
+
+
+\newtcolorbox[auto counter,number within=section]{code}[2][]{
+fonttitle=\bfseries,
+title=Code source de #2,#1,
+colback=white,
+colframe=black,
+arc=0mm
+}
+
+
+\newcommand{\Codesource}[2]{
+\begin{code}[]{\texttt{ #1 }}
+\lstinputlisting{ #2 }
+\end{code}
+
+}
 
 
 \title{Projet MyMake}
@@ -45,13 +69,20 @@
 \end{abstract}
 
 
+
+
 \begin{question}
- Etiam est elit, commodo ac magna quis, gravida bibendum ligula. Proin in laoreet nisl. Quisque viverra nisl at nunc porttitor, auctor porta justo porttitor. Maecenas consequat vitae tellus et maximus. Donec vestibulum lectus id dapibus dictum. Sed ante risus, elementum sed faucibus vel, pellentesque nec eros.
+Pour créer le fichier \texttt{Makefile}, analysons la dépendance entre les fichiers du projet :
+
+\Codesource{Makefile}{testproj/Makefile}
+
+
+
 
 \end{question}
 
 \begin{question}
-Vivamus luctus magna nibh, non consectetur nisi ornare nec. Sed venenatis mauris non sapien maximus dictum. Vestibulum rutrum gravida tellus sed condimentum. Proin lacus lorem, convallis non lorem sed, pharetra tincidunt ipsum. Sed viverra lacus odio, sit amet ultricies felis ornare vel. Donec id urna sed arcu fringilla commodo.
+
 \end{question}
 
 
