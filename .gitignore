@@ -71,3 +71,16 @@ testproj/mymake/test/c.h
 testproj/mymake/test/d.c
 testproj/mymake/test/d.h
 testproj/mymake/test/main.c
+testproj/test/a.c
+testproj/test/a.h
+testproj/test/b.c
+testproj/test/b.h
+testproj/test/c.c
+testproj/test/c.h
+testproj/test/d.c
+testproj/test/d.h
+testproj/test/main.c
+rapport.aux
+rapport.log
+rapport.synctex.gz
+rapport.pdf
