@@ -1,9 +1,3 @@
-# LaTeX
-*.pdf
-*.log
-*.aux
-
-
 # Prerequisites
 *.d
 
@@ -76,3 +70,7 @@ testproj/test/c.h
 testproj/test/d.c
 testproj/test/d.h
 testproj/test/main.c
+rapport.aux
+rapport.log
+rapport.synctex.gz
+rapport.pdf
