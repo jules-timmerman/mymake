@@ -2,6 +2,10 @@
 *.pdf
 *.log
 *.aux
+*.files
+*.fdb_latexmk
+*.synctex.gz
+*.fls
 
 
 # Prerequisites
