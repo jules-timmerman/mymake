@@ -26,6 +26,10 @@
 % Encadrés
 \usepackage{tcolorbox}
 
+% Graphes
+\usepackage{tikz}
+\usepackage{tikz-cd}
+
 
 %\renewcommand{\thesection}{\arabic{section}}
 %\renewcommand{\thesubsection}{\arabic{subsection}}
@@ -57,9 +61,18 @@ arc=0mm
 }
 
 
-\title{Projet MyMake}
+\title{MyMake}
 \date{Novembre 2022}
 \author{Guilhem Repetto \and Jules Timmerman}
+
+
+
+
+
+
+
+
+
 
 \begin{document}
 
@@ -73,7 +86,40 @@ arc=0mm
 
 
 \begin{question}
-Pour créer le fichier \texttt{Makefile}, analysons la dépendance entre les fichiers du projet :
+Pour créer le fichier \texttt{Makefile}, il faut comprendre la dépendance entre les fichiers du projet.
+Nous voulons compiler un fichier exécutable \texttt{main} à partir du fichier \texttt{main.c}.
+
+Tout d'abord, rappelons qu'au minimum, le fichier \texttt{main.c} est transformé par le préprocesseur en un fichier \texttt{main.i}, compilé en un fichier assembleur \texttt{main.s}, puis en un fichier binaire \texttt{main.o}. Enfin, l'étape d'édition des liens utilise \texttt{main.o} ainsi que tous les fichiers binaires (en \texttt{.o}) des bibliothèques et des fichiers annexes déclarés dans le \textit{header} de \texttt{main.c} (fichiers en \texttt{.h}) utilisés pour produire un fichier final exécutable \texttt{main}.
+
+
+Pour produire \texttt{main}, le compilateur a donc besoin du fichier \texttt{main.o}. Dans notre cas, les fichiers \texttt{c.h} et \texttt{d.h} sont déclarés en \textit{header}, ce qui implique que les fichiers \texttt{c.o} et \texttt{d.o} sont aussi demandés. De plus, les fichiers \texttt{a.h} et \texttt{b.h} sont demandés par \texttt{c.h}, et \texttt{a.h} est demandé par \texttt{d.h}. Pour compiler le fichier \texttt{main}, il faut donc avoir accès aux fichiers \texttt{main.o}, \texttt{a.o}, \texttt{b.o}, \texttt{c.o} et \texttt{d.o}.
+On ajoute donc les lignes suivantes au fichier \texttt{Makefile} :
+\begin{verbatim}
+main: main.o a.o b.o c.o d.o
+    gcc -o main main.o a.o b.o c.o d.o
+\end{verbatim}
+
+Pour le reste, on construit alors un graphe de dépendance (voir figure \ref{fig:dependance_test}), où $\mathtt{x}\rightarrow \mathtt{y}$ signifie que le fichier \texttt{y} a besoin du fichier \texttt{x} pour être compilé.
+
+
+\begin{figure}
+\centering
+\begin{tikzcd}
+\texttt{a.c} \arrow[rrd]                                                              &  &                    &  &  &                   \\
+\texttt{a.h} \arrow[u] \arrow[dddd, bend right] \arrow[dddddd, bend right] \arrow[rr] &  & \texttt{a.o} \arrow[rrrddd] &  &  &                   \\
+\texttt{b.c} \arrow[rrd]                                                              &  &                    &  &  &                   \\
+\texttt{b.h} \arrow[u] \arrow[dd, bend right] \arrow[rr]                              &  & \texttt{b.o} \arrow[rrrd]   &  &  &                   \\
+\texttt{c.c} \arrow[rrd]                                                              &  &                    &  &  & \texttt{main}              \\
+\texttt{c.h} \arrow[u] \arrow[rr]                                                     &  & \texttt{c.o} \arrow[rrru]   &  &  &                   \\
+\texttt{d.c} \arrow[rrd]                                                              &  &                    &  &  & \texttt{main.o} \arrow[uu] \\
+\texttt{d.h} \arrow[u] \arrow[rr]                                                     &  & \texttt{d.o} \arrow[rrruuu] &  &  &                  
+\end{tikzcd}
+\caption{Relations de dépendance entre les fichiers du dossier \texttt{test}}
+\label{fig:dependance_test}
+\end{figure}
+
+On peut alors en déduire le fichier \texttt{Makefile}.
+
 
 \Codesource{Makefile}{testproj/Makefile}
 

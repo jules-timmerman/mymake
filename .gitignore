@@ -1,11 +1,11 @@
 # LaTeX
-*.pdf
 *.log
 *.aux
 *.files
 *.fdb_latexmk
 *.synctex.gz
 *.fls
+*.bak
 
 
 # Prerequisites
