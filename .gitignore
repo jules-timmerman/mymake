@@ -75,3 +75,4 @@ testproj/c.h
 testproj/d.c
 testproj/d.h
 testproj/main.c
+.vscode/settings.json
