@@ -62,7 +62,7 @@ arc=0mm
 
 
 \title{MyMake}
-\date{Novembre 2022}
+\date{Octobre 2022}
 \author{Guilhem Repetto \and Jules Timmerman}
 
 
@@ -104,15 +104,16 @@ Pour le reste, on construit alors un graphe de dépendance (voir figure \ref{fig
 
 \begin{figure}
 \centering
+% https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBpiBdUkANwEMAbAVxiRAB12cYAPHf4FAB0AYwC+IMaXSZc+QijIBGKrUYs2nbnwHCAFhKkzseAkTIAmVfWatEHLr345gdUYekgMJ+edIBma3U7B21nVyEDSU9vOTNFUgAWINtNRx0XEXdo4ziFElIAVhSNey0nASyooy9ZU3yyADYSkPKM4AAjbJrY+r8Adha0sIEu6pi63xQLUhVqG1LQipdhCA9cvumAobL08Lc1nNqfeOQZ4vng4eXgLMOeydOZwcvU3ZGXLvuJk-zEpJ2S3aAFs6FgwOtjnkiP8rK9Fm1wqDwUJ7qoYFAAObwIigABmACcIMCkGQQDgIEgABw1QnEpBKagU6m0okkxAzcmUxAATlZ9MQ-iZ3L5njp7P+XIZxH57MKwulsqQjQViCUSiViH6qvVmqFUrVZIY4JCcAgxqgR3FSH1zMQVOoHRgYEtiBlYrZ1J1Fk1PO9mvV-o9AqUZLtSh9wfZSlt3Ij1D0MDorrATAYDE18oNMcdztd7vxnrVOv1TpdpLEFDEQA
 \begin{tikzcd}
-\texttt{a.c} \arrow[rrd]                                                              &  &                    &  &  &                   \\
-\texttt{a.h} \arrow[u] \arrow[dddd, bend right] \arrow[dddddd, bend right] \arrow[rr] &  & \texttt{a.o} \arrow[rrrddd] &  &  &                   \\
-\texttt{b.c} \arrow[rrd]                                                              &  &                    &  &  &                   \\
-\texttt{b.h} \arrow[u] \arrow[dd, bend right] \arrow[rr]                              &  & \texttt{b.o} \arrow[rrrd]   &  &  &                   \\
-\texttt{c.c} \arrow[rrd]                                                              &  &                    &  &  & \texttt{main}              \\
-\texttt{c.h} \arrow[u] \arrow[rr]                                                     &  & \texttt{c.o} \arrow[rrru]   &  &  &                   \\
-\texttt{d.c} \arrow[rrd]                                                              &  &                    &  &  & \texttt{main.o} \arrow[uu] \\
-\texttt{d.h} \arrow[u] \arrow[rr]                                                     &  & \texttt{d.o} \arrow[rrruuu] &  &  &                  
+\texttt{d.c} \arrow[rrd]                          &  &                            &  &                            \\
+\texttt{d.h} \arrow[rr] \arrow[rrrrd]             &  & \texttt{d.o} \arrow[rrddd] &  &                            \\
+\texttt{a.c} \arrow[rrd]                          &  &                            &  & \texttt{main.o} \arrow[dd] \\
+\texttt{a.h} \arrow[rr] \arrow[rrdd] \arrow[rruu] &  & \texttt{a.o} \arrow[rrd]   &  &                            \\
+\texttt{c.c} \arrow[rrd]                          &  &                            &  & \texttt{main}              \\
+\texttt{c.h} \arrow[rr] \arrow[rrrruuu]           &  & \texttt{c.o} \arrow[rru]   &  &                            \\
+\texttt{b.c} \arrow[rrd]                          &  &                            &  &                            \\
+\texttt{b.h} \arrow[rr]                           &  & \texttt{b.o} \arrow[rruuu] &  &                           
 \end{tikzcd}
 \caption{Relations de dépendance entre les fichiers du dossier \texttt{test}}
 \label{fig:dependance_test}
@@ -123,20 +124,10 @@ On peut alors en déduire le fichier \texttt{Makefile}.
 
 \Codesource{Makefile}{testproj/Makefile}
 
-
-
-
 \end{question}
-
-\begin{question}
-
-\end{question}
-
-
 
 
 \begin{thebibliography}{99}
-
 \bibitem{michou}
   \textit{Thèmes d'analyse (p.139 - 165)},
   Jean-Marie Exbrayat, Michel Alessandri,
@@ -148,13 +139,6 @@ On peut alors en déduire le fichier \texttt{Makefile}.
   F.D. et M.M.F.,
   La Recherche,
   2001.
-
-
 \end{thebibliography}
-
-
-
-
-
 
 \end{document}
