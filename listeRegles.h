@@ -5,8 +5,9 @@
 
 typedef struct listeRegles listeRegles_t;
 
-void addRegle(listeRegles_t* list, regle_t* r);
+
+listeRegles_t* createEmpty();
+listeRegles_t* addRegle(listeRegles_t* list, regle_t* r); // Ajoute en tête et renvoit une liste (cf CAML ::)
 
 
-
-#endif LISTEREGLES_H
+#endif
