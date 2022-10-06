@@ -80,7 +80,7 @@ arc=0mm
 
 
 \newcommand{\Codesource}[2]{
-\begin{figure}
+\begin{figure}[h]
 \lstinputlisting[language=c]{ #2 }
 \caption{Code source de \texttt{#1}}
 \label{code:#1}
@@ -137,7 +137,7 @@ main: main.o a.o b.o c.o d.o
 Pour le reste, on construit alors un graphe de dépendance (voir figure \ref{fig:dependance_test}), où $\mathtt{x}\rightarrow \mathtt{y}$ signifie que le fichier \texttt{y} a besoin du fichier \texttt{x} pour être compilé.
 
 
-\begin{figure}
+\begin{figure}[h]
 \centering
 % https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBpiBdUkANwEMAbAVxiRAB12cYAPHf4FAB0AYwC+IMaXSZc+QijIBGKrUYs2nbnwHCAFhKkzseAkTIAmVfWatEHLr345gdUYekgMJ+edIBma3U7B21nVyEDSU9vOTNFUgAWINtNRx0XEXdo4ziFElIAVhSNey0nASyooy9ZU3yyADYSkPKM4AAjbJrY+r8Adha0sIEu6pi63xQLUhVqG1LQipdhCA9cvumAobL08Lc1nNqfeOQZ4vng4eXgLMOeydOZwcvU3ZGXLvuJk-zEpJ2S3aAFs6FgwOtjnkiP8rK9Fm1wqDwUJ7qoYFAAObwIigABmACcIMCkGQQDgIEgABw1QnEpBKagU6m0okkxAzcmUxAATlZ9MQ-iZ3L5njp7P+XIZxH57MKwulsqQjQViCUSiViH6qvVmqFUrVZIY4JCcAgxqgR3FSH1zMQVOoHRgYEtiBlYrZ1J1Fk1PO9mvV-o9AqUZLtSh9wfZSlt3Ij1D0MDorrATAYDE18oNMcdztd7vxnrVOv1TpdpLEFDEQA
 \begin{tikzcd}
@@ -172,6 +172,13 @@ On peut alors en déduire le fichier \texttt{Makefile} (figure \ref{code:Makefil
 
 \Codesource{listeRegles.h}{listeRegles.h}
 \Codesource{listeRegles.c}{listeRegles.c}
+
+\end{question}
+
+\begin{question}
+
+On obtient le fichier suivant 
+\Codesource{Makefile}{Makefile}
 
 \end{question}
 

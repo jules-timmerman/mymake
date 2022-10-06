@@ -17,7 +17,7 @@ void freeListeRegle(listeRegles_t* r){
 	free(r);
 }
 
-// Ajoute une regle [r] à la liste de regles [list]
+// Ajoute une regle [r] a la liste de regles [list]
 listeRegles_t* addRegle(listeRegles_t* list, regle_t* r){
 	listeRegles_t* retList = malloc(sizeof(listeRegles_t));
 	retList->regle = r;
