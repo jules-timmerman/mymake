@@ -7,7 +7,7 @@ struct regle{
 	char** commandes;
 };
 
-typedef struct regle regle_t; // Création de la règle
+typedef struct regle regle_t; // Creation de la regle
 
 regle_t* createRegle(char* nom, char** prerequis, char** commandes);
 void freeRegle(regle_t* r);
