@@ -72,6 +72,7 @@ void make(listeRegles_t* list, regle_t* regle){
 // => Pas besoin d'une tolérance lors d'une même compil
 
 
+// TODO : Pas oublier de free les règles quelques part (soit à la fin de make, soit dans main)
 
 void main(){
     printf("Hello, world.");
