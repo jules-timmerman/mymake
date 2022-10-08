@@ -5,7 +5,6 @@
 
 #include "lectureMakefile.h"
 #include "listeRegles.h"
-#include "listeCommandes.h"
 
 
 listeRegles_t* makefile2list(FILE *makefile){

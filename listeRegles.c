@@ -1,7 +1,7 @@
-#include "listeRegles.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
+#include "listeRegles.h"
 
 
 // Cree une liste vide de regles (= le pointeur NULL)
