@@ -10,4 +10,11 @@ struct listeCommandes{
 	listeCommandes_t* next; // NULL quand le dernier
 };
 
+listeCommandes_t* createListeCommands(void);
+void freeListeCommands(listeCommandes_t* c);
+
+listeCommandes_t* addCommande(listeCommandes_t* list, char* c);
+
+void execCommandes(listeCommandes_t* list); // Execute chaque commandes dans la liste
+
 #endif

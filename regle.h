@@ -1,7 +1,7 @@
 #ifndef REGLE_H
 #define REGLE_H
 
-#include "lectureCommandes.h"
+#include "listeCommandes.h"
 
 struct regle{
 	char* nom;

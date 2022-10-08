@@ -1,8 +1,9 @@
+#include "listeCommandes.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
-#include "listeCommandes.h"
 
 
 // Cree une liste vide de commandes (= le pointeur NULL)
@@ -25,4 +26,14 @@ listeCommandes_t* addCommande(listeCommandes_t* list, char* c){
 	retList->commande = c;
 	retList->next = list;
 	return retList;
+}
+
+
+// Execute chaque commandes dans la liste
+void execCommandes(listeCommandes_t* list){
+	if(list == NULL){ // Bout de liste, cas d'arrêt
+		return;
+	}
+	system(list->commande);
+	execCommandes(list->next);
 }

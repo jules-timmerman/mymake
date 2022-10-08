@@ -6,6 +6,7 @@
 #include "listeRegles.h"
 
 
+
 // TODO : Optimisation sans iter ?
 // Q6 : version naive
 void make_naive(listeRegles_t* list, regle_t* regle){
@@ -18,9 +19,8 @@ void make_naive(listeRegles_t* list, regle_t* regle){
 	freeListeRegle(listPre); // On a fini avec cette liste
 
 
-	for(int i = 0; i < regle->lenCommandes; i++){ // On compile enfin la règle elle-même
-		system(regle->commandes[i]);
-	}
+	// On compile notre règle
+	execCommandes(regle->commandes);
 }
 
 
@@ -43,9 +43,8 @@ void make(listeRegles_t* list, regle_t* regle){
 
 	time_t lastChildModif = getLatestModify(listPre); // On récupère la dernière modification des enfants
 	if(lastChildModif > regle->lastModified){ // On a modifié une dépendance plus récemment : on recompile
-		for(int i = 0; i < regle->lenCommandes; i++){ // On compile la règle
-			system(regle->commandes[i]);
-		}
+		// On compile notre règle
+		execCommandes(regle->commandes);
 	}
 
 	freeListeRegle(listPre); // On free ce qu'on a utilisé

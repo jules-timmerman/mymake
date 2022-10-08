@@ -1,10 +1,12 @@
+#include "lectureMakefile.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
 
-#include "lectureMakefile.h"
 #include "listeRegles.h"
+#include "listeCommandes.h"
 
 
 listeRegles_t* makefile2list(FILE *makefile){
