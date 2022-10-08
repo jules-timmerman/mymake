@@ -1,36 +1,61 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 #include "listeRegles.h"
 #include "regle.c"
+#include "listeRegles.c"
+
 
 listeRegles_t* makefile2list(FILE *makefile){
 	char *ligne_buffer = NULL;
 	size_t tailleLigne_buffer;
 	ssize_t tailleLigne;
-
+	
+	bool push = true; // Booléen disant si la dernière règle a été incluse dans la liste de règles
+	char *token;
+	regle_t* nouvelleRegle = createRegle(token, NULL , 0, NULL, 0);
+	listeRegles_t* liste;
 	tailleLigne = getline(&ligne_buffer, &tailleLigne_buffer, makefile); // Première ligne du fichier
 
 	while(tailleLigne>=0){
-
-		if (tailleLigne == 1){} //Ligne vide : juste le caractère \n
+		if (tailleLigne == 1){	// Ligne vide
+			if (!push){ // On ajoute la règle si ce n'est déjà fait
+				addRegle(liste, nouvelleRegle);
+				push = true;
+			}
+			else {}
+		}
 		else if (*ligne_buffer != 9) { // pas de tabulation -> nouvelle règle !
-			char *token;
+			push = false;
 			token = strtok(ligne_buffer, ":"); // D'abord le nom de la règle (avant ":")
 			printf("Nom nouvelleRegle : %s\n", token);
 			int lenPrerequis = 0;
-			regle_t* nouvelleRegle = createRegle(token, NULL, lenPrerequis, NULL, 0);
-			token = strtok(NULL, " \n"); // Prérequis suivant
+			
+			token = strtok(NULL, " "); // Comptage du nombre de prérequis
+			
 			while(token != NULL) {
-				printf( "-> %s\n", token);
 				lenPrerequis++;
+				token = strtok(NULL, " ");
+			};
+
+			char* prerequis[lenPrerequis];
+			token = strtok(ligne_buffer, ":"); // On repart à 0
+			token = strtok(NULL, " ");
+			for (int i=0 ; i< lenPrerequis; i++) {
+				prerequis[i] = token;
 				token = strtok(NULL, " "); // Suivant !
 			};
+			nouvelleRegle->lenPrerequis = lenPrerequis;
+			nouvelleRegle->prerequis = prerequis;
+			
 			printf("Nombre prerequis : %d\n", lenPrerequis);
 		}
 		else { // C'est une commande !
 			ligne_buffer++; // Pour négliger la tabulation, on saute une case mémoire 
 			printf("Commande : %s\n", ligne_buffer);
+			nouvelleRegle->lenCommandes++;
+			
 		}
 		tailleLigne = getline(&ligne_buffer, &tailleLigne_buffer, makefile); // Nouvelle ligne
 	}
