@@ -21,28 +21,27 @@ listeRegles_t* makefile2list(FILE *makefile){
 
 	while(tailleLigne>=0){
 		if (tailleLigne == 1){	// Ligne vide
-			if (!pushed){ // On ajoute la règle si ce n'est déjà fait (il peut y avoir plusieurs \n)
-				nouvelleRegle->commandes = nouvelleListeCommandes;
-				addRegle(liste, nouvelleRegle);
+			if (!pushed){ // On complète et ajoute la règle si ce n'est déjà fait (il peut y avoir plusieurs \n)
+				nouvelleRegle->commandes = revList(nouvelleListeCommandes); // Renversée -> ordre de lecture
+				liste = addRegle(liste, nouvelleRegle);
 				pushed = true;
 			}
 			else {}
 		}
 		else if (*ligne_buffer != 9) { // pas de tabulation -> nouvelle règle !
-			pushed = false;
-			token = strtok(ligne_buffer, ":"); // D'abord le nom de la règle (avant ":")
+			pushed = false; // Cette règle n'est pas encore dans liste
+			token = strtok(ligne_buffer, ":"); // Nom de la règle (avant ":" dans la ligne)
 			printf("Nom nouvelleRegle : %s\n", token);
 			int lenPrerequis = 0;
-			
-			token = strtok(NULL, " "); // Comptage du nombre de prérequis
-			
+			token = strtok(NULL, " "); 
+			// Comptage du nombre de prérequis
 			while(token != NULL) {
 				lenPrerequis++;
 				token = strtok(NULL, " ");
 			};
 
 			char* prerequis[lenPrerequis];
-			token = strtok(ligne_buffer, ":"); // On repart à 0
+			token = strtok(ligne_buffer, ":"); // On repart au premier prérequis
 			token = strtok(NULL, " ");
 			for (int i=0 ; i< lenPrerequis; i++) {
 				prerequis[i] = token;
@@ -53,14 +52,20 @@ listeRegles_t* makefile2list(FILE *makefile){
 			
 			printf("Nombre prerequis : %d\n", lenPrerequis);
 		}
-		else { // C'est une commande !
+		else { // C'est une ligne de commande !
 			ligne_buffer++; // Pour négliger la tabulation, on saute une case mémoire (optionnel)
 			printf("Commande : %s\n", ligne_buffer);
-			addCommande(nouvelleListeCommandes, ligne_buffer);
+			nouvelleListeCommandes = addCommande(nouvelleListeCommandes, ligne_buffer);
 		}
 
-		tailleLigne = getline(&ligne_buffer, &tailleLigne_buffer, makefile); // Nouvelle ligne
+		tailleLigne = getline(&ligne_buffer, &tailleLigne_buffer, makefile); // Lecture nouvelle ligne
 	}
+	if (!pushed){ // Il reste peut-être une commande à ajouter à la liste
+		nouvelleRegle->commandes = revList(nouvelleListeCommandes);
+		liste = addRegle(liste, nouvelleRegle);
+	}
+	else {}
+	return liste;
 }
 
 listeRegles_t* main(){

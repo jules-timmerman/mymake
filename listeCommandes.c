@@ -28,6 +28,21 @@ listeCommandes_t* addCommande(listeCommandes_t* list, char* c){
 	return retList;
 }
 
+// Renverse la liste [list1] dans la liste [list2]
+listeCommandes_t* auxRevList(listeCommandes_t* list1, listeCommandes_t* list2){
+		if (list1 == NULL){
+			return list2;
+		}
+		else {
+			return (auxRevList (list1->next, addCommande(list2, list1->commande)));
+		}
+	}
+
+// Renvoie un pointeur vers la liste renversée de [list]
+listeCommandes_t* revList(listeCommandes_t* list){
+	return (auxRevList(list, createListeCommands()));
+}
+
 
 // Execute chaque commandes dans la liste
 void execCommandes(listeCommandes_t* list){

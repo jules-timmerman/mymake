@@ -4,10 +4,7 @@
 #include "listeRegles.h"
 #include <stdio.h>
 
-
-
 listeRegles_t* makefile2list(FILE* makefile);
-
 
 
 #endif

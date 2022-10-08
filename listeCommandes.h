@@ -15,6 +15,9 @@ void freeListeCommands(listeCommandes_t* c);
 
 listeCommandes_t* addCommande(listeCommandes_t* list, char* c);
 
+listeCommandes_t* auxRevList(listeCommandes_t* list1, listeCommandes_t* list2);
+listeCommandes_t* revList(listeCommandes_t* list);
+
 void execCommandes(listeCommandes_t* list); // Execute chaque commandes dans la liste
 
 #endif
