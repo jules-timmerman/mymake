@@ -9,7 +9,7 @@ listeRegles_t* createListeRegle(void){
 	return NULL;
 }
 
-// Libere une liste de regles (sans libérer les règles elle-mêmes)
+// Libere une liste de regles (sans libérer les règles elles-mêmes)
 void freeListeRegle(listeRegles_t* r){
 	if(r != NULL){
 		listeRegles_t* next = r->next;
@@ -26,7 +26,7 @@ listeRegles_t* addRegle(listeRegles_t* list, regle_t* r){
 	return retList;
 }
 
-// Cree la liste des règles prérequise pour une règle donnée
+// Cree la liste des règles prérequises pour une règle donnée
 listeRegles_t* createListeRegleFromPre(listeRegles_t* list, regle_t* regle){
 	listeRegles_t* retList = createListeRegle(); 
 	for(int i = 0; i < regle->lenPrerequis; i++){
@@ -39,7 +39,7 @@ listeRegles_t* createListeRegleFromPre(listeRegles_t* list, regle_t* regle){
 }
 
 
-// Renvoie un pointeur vers la regle de nom [nom], et NULL si une telle regle n'existe pas
+// Renvoie un pointeur vers la regle nommée [nom], et NULL si une telle regle n'existe pas
 regle_t* rechercheRegle(listeRegles_t* list, char nom){
 	if (list == NULL){
 		return NULL;

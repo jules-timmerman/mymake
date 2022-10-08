@@ -7,7 +7,7 @@ struct regle{
 	int lenPrerequis;
 	char** commandes;
 	int lenCommandes;
-	time_t lastModified; // La dernière modification (en seconde)
+	time_t lastModified; // La dernière modification (en secondes)
 };
 
 typedef struct regle regle_t; // Creation de la regle

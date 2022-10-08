@@ -6,7 +6,36 @@
 #include "listeRegles.h"
 
 
-/* Transforme une regle de type main: main.o regle.o listeRegles.o */
+// Transforme un ligne du Makefile en une règle
+// main: main.o regle.o listeRegles.o
+listeRegles_t makefile2list(FILE* makefile){
+	listeRegles_t* liste = createListeRegle();
+	regle_t* nouvelleRegle;
+
+	char *ligne_buffer;
+	int tailleLigne_buffer = 256;
+	ssize_t tailleLigne;
+
+	tailleLigne = getline(&ligne_buffer, &tailleLigne_buffer, makefile); // Première ligne
+	while(tailleLigne>=0){}
+		char *token;
+		token = strtok(ligne_buffer, ":"); // Découpe première ligne après ":"
+		nouvelleRegle->nom = token;
+		
+		char *prerequis;
+		int lenPrerequis = 0;
+		token = strtok(NULL, " "); // Prérequis suivant
+		while(token != NULL) {
+			printf( " %s\n", token );
+			prerequis[lenPrerequis] = token;
+			lenPrerequis++;
+			token = strtok(NULL, " "); // Suivant !
+		};
+		nouvelleRegle->prerequis = prerequis;
+		nouvelleRegle->lenPrerequis = lenPrerequis;
+	}
+}
+
 listeRegles_t readMakefile(FILE* makefile){
     char ligne[512];
     listeRegles_t* liste = createListeRegle(); 
