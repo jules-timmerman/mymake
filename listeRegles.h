@@ -3,6 +3,8 @@
 
 #include "regle.h"
 
+typedef struct listeRegles listeRegles_t;
+
 // Une liste de regles est soit le pointeur NULL,
 // soit un couple compose d'une regle et d'un pointeur vers une liste de regles
 struct listeRegles{
@@ -10,7 +12,7 @@ struct listeRegles{
 	listeRegles_t* next; // NULL quand le dernier
 };
 
-typedef struct listeRegles listeRegles_t;
+
 
 listeRegles_t* createListeRegle(void);
 void freeListeRegle(listeRegles_t* r);
