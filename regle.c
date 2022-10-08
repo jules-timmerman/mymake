@@ -6,7 +6,7 @@
 #include <sys/types.h>
 
 
-regle_t* createRegle(char* nom, char** prerequis, int lenPrerequis, listeCommandes commandes){
+regle_t* createRegle(char* nom, char** prerequis, int lenPrerequis, listeCommandes_t* commandes){
 	regle_t* r = malloc(sizeof(regle_t));
 	r->nom = nom;
 	r->prerequis = prerequis;

@@ -39,13 +39,15 @@ listeRegles_t* makefile2list(FILE *makefile){
 	
 	bool pushed = true; // Booléen disant si la dernière règle a été incluse dans la liste de règles
 	char *token;
-	regle_t* nouvelleRegle = createRegle(token, NULL , 0, NULL, 0);
+	regle_t* nouvelleRegle = createRegle(token, NULL , 0, NULL);
 	listeRegles_t* liste;
+	listeCommandes_t* nouvelleListeCommandes;
 	tailleLigne = getline(&ligne_buffer, &tailleLigne_buffer, makefile); // Première ligne du fichier
 
 	while(tailleLigne>=0){
 		if (tailleLigne == 1){	// Ligne vide
 			if (!pushed){ // On ajoute la règle si ce n'est déjà fait (il peut y avoir plusieurs \n)
+				nouvelleRegle->commandes = nouvelleListeCommandes;
 				addRegle(liste, nouvelleRegle);
 				pushed = true;
 			}
@@ -79,7 +81,7 @@ listeRegles_t* makefile2list(FILE *makefile){
 		else { // C'est une commande !
 			ligne_buffer++; // Pour négliger la tabulation, on saute une case mémoire (optionnel)
 			printf("Commande : %s\n", ligne_buffer);
-			(nouvelleRegle->lenCommandes)++;
+			addCommande(nouvelleListeCommandes, ligne_buffer);
 		}
 
 		tailleLigne = getline(&ligne_buffer, &tailleLigne_buffer, makefile); // Nouvelle ligne
