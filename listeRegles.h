@@ -2,6 +2,8 @@
 #define LISTEREGLES_H
 
 #include "regle.h"
+#include <sys/types.h> // En soit c'est dans regle.h mais bon
+
 
 typedef struct listeRegles listeRegles_t;
 

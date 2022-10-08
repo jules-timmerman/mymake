@@ -2,6 +2,7 @@
 #define REGLE_H
 
 #include "listeCommandes.h"
+#include <sys/types.h> // Pour time_t
 
 struct regle{
 	char* nom;
