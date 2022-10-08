@@ -1,5 +1,4 @@
 #include "regle.h"
-#include "lectureMakefile.h"
 #include <stdlib.h>
 
 #include <sys/stat.h>
@@ -7,7 +6,7 @@
 #include <sys/types.h>
 
 
-regle_t* createRegle(char* nom, char** prerequis, int lenPrerequis, listeCommandes commandes, int lenCommandes){
+regle_t* createRegle(char* nom, char** prerequis, int lenPrerequis, listeCommandes commandes){
 	regle_t* r = malloc(sizeof(regle_t));
 	r->nom = nom;
 	r->prerequis = prerequis;
