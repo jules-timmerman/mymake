@@ -10,10 +10,15 @@ listeRegles_t* createListeRegle(void){
 }
 
 // Libere une liste de regles (sans libérer les règles elles-mêmes)
-void freeListeRegle(listeRegles_t* r){
-	if(r != NULL){
-		listeRegles_t* next = r->next;
-		free(r);
+void freeListeRegle(listeRegles_t* list){
+	if(list != NULL){
+		listeRegles_t* next = list->next;
+		
+		if(estFichier(list->regle->nom) == 1){ // Il s'agit d'une pseudo-règle (cf createListeRegleFromPre)
+			freeRegle(list->regle);
+		}
+		
+		free(list);
 		freeListeRegle(next);
 	}
 }
@@ -26,13 +31,22 @@ listeRegles_t* addRegle(listeRegles_t* list, regle_t* r){
 	return retList;
 }
 
-// Cree la liste des règles prérequises pour une règle donnée
+// Cree la liste des règles prérequises pour une règle donnée (pour les .h/.c, on crée des pseudos-règles)
 listeRegles_t* createListeRegleFromPre(listeRegles_t* list, regle_t* regle){
-	listeRegles_t* retList = createListeRegle(); 
+	listeRegles_t* retList = createListeRegle(); // Liste vide que l'on retournera
+
 	for(int i = 0; i < regle->lenPrerequis; i++){
-		regle_t* r = rechercheRegle(list, regle->prerequis[i]);
-		if(r != NULL){ // Si on a trouvé une règle correspondant au ieme prérequis
-			addRegle(retList, r); // On l'ajoute à notre liste de retour
+		if(estFichier(regle->prerequis[i]) == 1){ // Les .h / .c n'ont pas de règles dans list : on crée une pseudo règle pour faciliter l'écriture du programme
+			// On freera la pseudo-règle en même temps que le retour de la fonction
+			// On passe par createRegle pour pouvoir bien initialiser le hash etc...
+			regle_t* r = createRegle(regle->prerequis[i], NULL, 0, NULL); 
+
+			addRegle(retList, r);
+		}else{
+			regle_t* r = rechercheRegle(list, regle->prerequis[i]); // On cherche le ieme prerequis dans la liste
+			if(r != NULL){ // Si on a trouvé une règle correspondant au ieme prérequis
+				addRegle(retList, r); // On l'ajoute à notre liste de retour
+			}
 		}
 	}
 	return retList;
@@ -72,3 +86,15 @@ time_t getLatestModify(listeRegles_t* list){
 	if(recT < list->regle->lastModified){ return list->regle->lastModified; } // On renvoit le max
 	return recT;
 }
+
+
+int childModified(listeRegles_t* list){
+	if(list == NULL){ // Cas de base : on est arrivé au bout
+		return 0;
+	}
+	if(list->regle->hashModified == 1){ // La règle a été modifiée : on termine directement
+		return 1;
+	}
+	return childModified(list->next);
+}
+
