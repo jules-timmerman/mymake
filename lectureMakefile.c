@@ -2,9 +2,34 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdbool.h>
+#include "lectureMakefile.h"
 #include "listeRegles.h"
 #include "regle.c"
 #include "listeRegles.c"
+
+
+// Cree une liste vide de commandes (= le pointeur NULL)
+listeCommandes_t* createListeCommands(void){
+	return NULL;
+}
+
+// Libere une liste de commandes (sans libérer les commandes elles-mêmes)
+void freeListeCommands(listeCommandes_t* c){
+	if(c != NULL){
+		listeCommandes_t* next = c->next;
+		free(c);
+		freeListeCommands(next);
+	}
+}
+
+// Ajoute une commande [r] a la liste de commandes [list]
+listeCommandes_t* addCommande(listeCommandes_t* list, char* c){
+	listeCommandes_t* retList = malloc(sizeof(listeCommandes_t));
+	retList->commande = c;
+	retList->next = list;
+	return retList;
+}
+
 
 
 listeRegles_t* makefile2list(FILE *makefile){
@@ -20,7 +45,7 @@ listeRegles_t* makefile2list(FILE *makefile){
 
 	while(tailleLigne>=0){
 		if (tailleLigne == 1){	// Ligne vide
-			if (!push){ // On ajoute la règle si ce n'est déjà fait
+			if (!push){ // On ajoute la règle si ce n'est déjà fait (il peut y avoir plusieurs \n)
 				addRegle(liste, nouvelleRegle);
 				push = true;
 			}
@@ -52,11 +77,11 @@ listeRegles_t* makefile2list(FILE *makefile){
 			printf("Nombre prerequis : %d\n", lenPrerequis);
 		}
 		else { // C'est une commande !
-			ligne_buffer++; // Pour négliger la tabulation, on saute une case mémoire 
+			ligne_buffer++; // Pour négliger la tabulation, on saute une case mémoire (optionnel)
 			printf("Commande : %s\n", ligne_buffer);
-			nouvelleRegle->lenCommandes++;
-			
+			(nouvelleRegle->lenCommandes)++;
 		}
+
 		tailleLigne = getline(&ligne_buffer, &tailleLigne_buffer, makefile); // Nouvelle ligne
 	}
 }
