@@ -8,4 +8,4 @@ regle.o : regle.c regle.h
 	gcc -c regle.c
 
 listeRegles.o : listeRegles.c listeRegles.h regle.h
-	gcc -c listeRegle.c
+	gcc -c listeRegles.c

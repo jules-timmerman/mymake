@@ -4,6 +4,8 @@
 
 #include "regle.h"
 #include "listeRegles.h"
+#include "listeCommandes.h"
+#include "lectureMakefile.h"
 
 
 
@@ -17,7 +19,6 @@ void make_naive(listeRegles_t* list, regle_t* regle){
 	listeRegles_t* listPre = createListeRegleFromPre(list, regle);
 	iterRegles(listPre, list, &make_naive, 1); // On applique make_naive à tout les éléments de listPre (avec argument list) (en ignorant NULL au cas où)
 	freeListeRegle(listPre); // On a fini avec cette liste
-
 
 	// On compile notre règle
 	execCommandes(regle->commandes);

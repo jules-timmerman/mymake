@@ -43,7 +43,7 @@ listeRegles_t* createListeRegleFromPre(listeRegles_t* list, regle_t* regle){
 
 			addRegle(retList, r);
 		}else{
-			regle_t* r = rechercheRegle(list, regle->prerequis[i]); // On cherche le ieme prerequis dans la liste
+			regle_t* r = rechercheRegle(list, *regle->prerequis[i]); // On cherche le ieme prerequis dans la liste
 			if(r != NULL){ // Si on a trouvé une règle correspondant au ieme prérequis
 				addRegle(retList, r); // On l'ajoute à notre liste de retour
 			}

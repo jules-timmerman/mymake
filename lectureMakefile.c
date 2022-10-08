@@ -7,17 +7,17 @@
 #include "listeCommandes.h"
 
 
-listeRegles_t* makefile2list(FILE *makefile){
-	char *ligne_buffer = NULL;
+listeRegles_t* makefile2list(FILE* makefile){
+	char *ligne_buffer = NULL; // Stockage de la ligne courante
 	size_t tailleLigne_buffer;
-	ssize_t tailleLigne;
+	ssize_t tailleLigne; // Taille de la ligne courante, en comptant \n
 	
-	bool pushed = true; // Booléen disant si la dernière règle a été incluse dans la liste de règles
+	bool pushed = true; // true si la dernière règle a été incluse dans la liste de règles
 	char *token;
 	regle_t* nouvelleRegle = createRegle(token, NULL , 0, NULL);
 	listeRegles_t* liste;
 	listeCommandes_t* nouvelleListeCommandes;
-	tailleLigne = getline(&ligne_buffer, &tailleLigne_buffer, makefile); // Première ligne du fichier
+	tailleLigne = getline(&ligne_buffer, &tailleLigne_buffer, makefile);
 
 	while(tailleLigne>=0){
 		if (tailleLigne == 1){	// Ligne vide
@@ -53,14 +53,15 @@ listeRegles_t* makefile2list(FILE *makefile){
 			printf("Nombre prerequis : %d\n", lenPrerequis);
 		}
 		else { // C'est une ligne de commande !
-			ligne_buffer++; // Pour négliger la tabulation, on saute une case mémoire (optionnel)
+			ligne_buffer++; // Pour négliger la tabulation, on saute une case mémoire (surement optionnel)
 			printf("Commande : %s\n", ligne_buffer);
 			nouvelleListeCommandes = addCommande(nouvelleListeCommandes, ligne_buffer);
 		}
 
 		tailleLigne = getline(&ligne_buffer, &tailleLigne_buffer, makefile); // Lecture nouvelle ligne
 	}
-	if (!pushed){ // Il reste peut-être une commande à ajouter à la liste
+
+	if (!pushed){ // Il reste probablement une commande à ajouter à la liste
 		nouvelleRegle->commandes = revList(nouvelleListeCommandes);
 		liste = addRegle(liste, nouvelleRegle);
 	}
@@ -68,6 +69,6 @@ listeRegles_t* makefile2list(FILE *makefile){
 	return liste;
 }
 
-listeRegles_t* main(){
-	makefile2list(fopen("Makefile", "r"));
-}
+//listeRegles_t* main(){
+//	makefile2list(fopen("Makefile", "r"));
+//}
