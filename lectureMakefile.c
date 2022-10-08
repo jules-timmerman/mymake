@@ -37,7 +37,7 @@ listeRegles_t* makefile2list(FILE *makefile){
 	size_t tailleLigne_buffer;
 	ssize_t tailleLigne;
 	
-	bool push = true; // Booléen disant si la dernière règle a été incluse dans la liste de règles
+	bool pushed = true; // Booléen disant si la dernière règle a été incluse dans la liste de règles
 	char *token;
 	regle_t* nouvelleRegle = createRegle(token, NULL , 0, NULL, 0);
 	listeRegles_t* liste;
@@ -45,14 +45,14 @@ listeRegles_t* makefile2list(FILE *makefile){
 
 	while(tailleLigne>=0){
 		if (tailleLigne == 1){	// Ligne vide
-			if (!push){ // On ajoute la règle si ce n'est déjà fait (il peut y avoir plusieurs \n)
+			if (!pushed){ // On ajoute la règle si ce n'est déjà fait (il peut y avoir plusieurs \n)
 				addRegle(liste, nouvelleRegle);
-				push = true;
+				pushed = true;
 			}
 			else {}
 		}
 		else if (*ligne_buffer != 9) { // pas de tabulation -> nouvelle règle !
-			push = false;
+			pushed = false;
 			token = strtok(ligne_buffer, ":"); // D'abord le nom de la règle (avant ":")
 			printf("Nom nouvelleRegle : %s\n", token);
 			int lenPrerequis = 0;

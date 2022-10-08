@@ -4,9 +4,6 @@
 #include "regle.h"
 #include "listeRegles.h"
 // Utile ???
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
 
 typedef struct listeCommandes listeCommandes_t;
 

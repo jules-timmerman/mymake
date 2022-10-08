@@ -5,7 +5,7 @@ struct regle{
 	char* nom;
 	char** prerequis;
 	int lenPrerequis;
-	char** commandes;
+	listeCommandes commandes;
 	int lenCommandes;
 	time_t lastModified; // La dernière modification (en secondes)
 };
