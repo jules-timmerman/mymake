@@ -14,7 +14,7 @@ struct listeCommandes{
 listeCommandes_t* createListeCommands(void);
 
 // Libere une liste de commandes (sans libérer les commandes elles-mêmes)
-void freeListeCommands(listeCommandes_t* c);
+void freeListeCommands(listeCommandes_t* c, int freeContent);
 
 // Ajoute une commande [r] a la liste de commandes [list] (en tête)
 listeCommandes_t* addCommande(listeCommandes_t* list, char* c);

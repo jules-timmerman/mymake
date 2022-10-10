@@ -55,11 +55,19 @@ listeRegles_t* makefile2list(FILE* makefile){
 			strcpy(copyLigne, ligne_buffer); // On refait une nouvelle copie pour ne pas changer ligne_buffer et pouvoir free à la fin
 			token = strtok(copyLigne, ":"); // On repart au premier prérequis
 			token = strtok(NULL, " ");
-			for (int i=0 ; i< lenPrerequis; i++) { // TODO : Attention au \n à la fin du dernier de la ligne
+
+			for (int i=0 ; i< lenPrerequis - 1; i++) { // On ne va pas au bout de la lecture cf en dessous
 				prerequis[i] = malloc(strlen(token) + 1); // Pour rajouter le nullbyte
 				strcpy(prerequis[i], token); // On copie
 				token = strtok(NULL, " "); // Suivant !
 			};
+			// On traite le dernier à part à cause de la lecture d'un \n final que l'on enlève ici
+			size_t len = strlen(token);
+			token[len-1] = '\0'; // On change le \n en un \0 (donc on l'enlève)
+			prerequis[lenPrerequis - 1] = malloc(len); // Au final la taille devient 1 de main
+			strcpy(prerequis[lenPrerequis - 1], token);
+			token = strtok(NULL, " "); 
+
 			nouvelleListeCommandes = createListeCommands(); // On crée notre liste vide de commandes 
 			nouvelleRegle = createRegle(nom, prerequis, lenPrerequis, nouvelleListeCommandes); // On crée la règle. On remplira la liste de commandes au fur et à mesure
 
@@ -70,7 +78,11 @@ listeRegles_t* makefile2list(FILE* makefile){
 		else { // C'est une ligne de commande !
 			ligne_buffer++; // Pour négliger la tabulation, on saute une case mémoire (surement optionnel)
 			printf("Commande : %s\n", ligne_buffer);
-			nouvelleListeCommandes = addCommande(nouvelleListeCommandes, ligne_buffer);
+
+			char* commande = malloc(strlen(ligne_buffer) + 1); // On fait la copie pour les mêmes raisons qu'avant (pas mourir à la fin)
+			strcpy(commande, ligne_buffer);
+
+			nouvelleListeCommandes = addCommande(nouvelleListeCommandes, commande);
 			ligne_buffer--; // On redécale pour que le free fonctionne
 		}
 
@@ -98,7 +110,7 @@ void make_naive(listeRegles_t* list, regle_t* regle){
 	// Sinon : on construit récursivement
 	listeRegles_t* listPre = createListeRegleFromPre(list, regle);
 	iterRegles(listPre, list, &make_naive, 1); // On applique make_naive à tout les éléments de listPre (avec argument list) (en ignorant NULL au cas où)
-	freeListeRegle(listPre); // On a fini avec cette liste
+	freeListeRegle(listPre, 0); // On a fini avec cette liste
 
 	// On compile notre règle
 	execCommandes(regle->commandes);
@@ -126,7 +138,7 @@ void make(listeRegles_t* list, regle_t* regle){
 		execCommandes(regle->commandes);
 	}
 
-	freeListeRegle(listPre); // On free ce qu'on a utilisé
+	freeListeRegle(listPre, 0); // On free ce qu'on a utilisé
 }
 
 // Remarque : on compile d'abord les enfants donc lors d'une compilation, on aura toujours le temps modifié des enfants inférieurs au parent
@@ -155,7 +167,7 @@ void makeWHash(listeRegles_t* list, regle_t* regle){
 
 	
 
-	freeListeRegle(listPre); // On free ce qu'on a utilisé (ainsi que les pseudos-règles au passage)
+	freeListeRegle(listPre, 0); // On free ce qu'on a utilisé (ainsi que les pseudos-règles au passage)
 }
 
 
@@ -174,7 +186,7 @@ int main(int argc, char** argv){
 		listeRegles_t* list = makefile2list(makefile);
 		make_naive(list, rechercheRegle(list, cible));
 		
-		freeListeRegleAndContent(list);
+		freeListeRegle(list, 1);
 		fclose(makefile);
 	}
 }
