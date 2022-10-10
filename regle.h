@@ -3,6 +3,7 @@
 
 #include "listeCommandes.h"
 #include <sys/types.h> // Pour time_t
+#include <stdio.h>
 
 struct regle{
 	char* nom;
