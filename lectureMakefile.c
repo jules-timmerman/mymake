@@ -66,7 +66,8 @@ listeRegles_t* makefile2list(FILE* makefile){
 		liste = addRegle(liste, nouvelleRegle);
 	}
 	else {}
-	return liste;
+	return createListeRegle();
+	//return liste;
 }
 
 //listeRegles_t* main(){

@@ -39,7 +39,9 @@ listeCommandes_t* auxRevList(listeCommandes_t* list1, listeCommandes_t* list2){
 
 
 listeCommandes_t* revList(listeCommandes_t* list){
-	return (auxRevList(list, createListeCommands()));
+	listeCommandes_t* init = createListeCommands();
+	listeCommandes_t* renverse = list;
+	return renverse;
 }
 
 
