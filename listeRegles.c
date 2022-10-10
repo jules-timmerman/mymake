@@ -83,7 +83,7 @@ time_t getLatestModify(listeRegles_t* list){
 		return 0;
 	}
 	time_t recT = getLatestModify(list->next); // Appel récursif
-	if(recT < list->regle->lastModified){ return list->regle->lastModified; } // On renvoit le max
+	if(recT < list->regle->lastModified){ return list->regle->lastModified; } // On renvoie le max
 	return recT;
 }
 

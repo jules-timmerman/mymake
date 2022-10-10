@@ -15,7 +15,7 @@ listeRegles_t* makefile2list(FILE* makefile){
 	bool pushed = true; // true si la dernière règle a été incluse dans la liste de règles
 	char *token;
 	regle_t* nouvelleRegle = createRegle(token, NULL , 0, NULL);
-	listeRegles_t* liste;
+	listeRegles_t* liste = createListeRegle();
 	listeCommandes_t* nouvelleListeCommandes;
 	tailleLigne = getline(&ligne_buffer, &tailleLigne_buffer, makefile);
 
