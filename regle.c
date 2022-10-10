@@ -37,7 +37,7 @@ void freeRegle(regle_t* r, int isPseudo){
 		}
 		free(r->prerequis);	// Le tableau lui-même
 		
-		freeListeCommands(r->commandes);	
+		freeListeCommands(r->commandes, 1); // Ici on free le contenu avec (c'est la fin)	
 	}
 
 	free(r);

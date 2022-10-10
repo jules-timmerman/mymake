@@ -11,13 +11,18 @@ listeCommandes_t* createListeCommands(void){
 }
 
 
-void freeListeCommands(listeCommandes_t* c){
+// Booléen pour si on libère l'intérieur ou pas
+void freeListeCommands(listeCommandes_t* c, int freeContent){ 
 	if(c != NULL){
 		listeCommandes_t* next = c->next;
+		if(freeContent == 1){
+			free(c->commande); // Cf la création on doit copier
+		}
 		free(c);
-		freeListeCommands(next);
+		freeListeCommands(next, freeContent);
 	}
 }
+
 
 
 listeCommandes_t* addCommande(listeCommandes_t* list, char* c){
@@ -58,7 +63,7 @@ listeCommandes_t* revList(listeCommandes_t* list){
 			nouvelleListe = addCommande(nouvelleListe, acc->commande); // On ajoute la suivante en tête
 			acc = acc->next; // On regarde la suite
 		}
-		freeListeCommands(list); // On a crée une nouvelle liste donc on free l'ancienne
+		freeListeCommands(list, 0); // On a crée une nouvelle liste donc on free l'ancienne mais pas le contenu
 		return nouvelleListe;
 	};
 }

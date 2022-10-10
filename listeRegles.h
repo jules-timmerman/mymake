@@ -17,8 +17,7 @@ struct listeRegles{
 
 
 listeRegles_t* createListeRegle(void);
-void freeListeRegle(listeRegles_t* list);
-void freeListeRegleAndContent(listeRegles_t* list); // Libère la liste ET les règles contenues
+void freeListeRegle(listeRegles_t* list, int freeContent);
 listeRegles_t* createListeRegleFromPre(listeRegles_t* list, regle_t* regle); // Cree une la liste des prerequis pour une regle
 
 listeRegles_t* addRegle(listeRegles_t* list, regle_t* r); // Ajoute en tete et renvoie une liste (cf CAML ::)
