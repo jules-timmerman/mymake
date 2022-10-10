@@ -3,17 +3,16 @@
 
 typedef struct listeCommandes listeCommandes_t;
 
-// Une liste de commandes est soit le pointeur NULL,
-// soit un couple composé d'une commande et d'un pointeur vers une liste de commandes
+// NULL ou couple (commande, pointeur vers liste de commandes)
 struct listeCommandes{
 	char* commande;
 	listeCommandes_t* next; // NULL quand le dernier
 };
 
-// Cree une liste vide de commandes (= le pointeur NULL)
+// Crée une liste vide de commandes (= le pointeur NULL)
 listeCommandes_t* createListeCommands(void);
 
-// Libere une liste de commandes (sans libérer les commandes elles-mêmes)
+// Libère une liste de commandes (sans libérer les commandes elles-mêmes)
 void freeListeCommands(listeCommandes_t* c);
 
 // Ajoute une commande [r] a la liste de commandes [list] (en tête)
