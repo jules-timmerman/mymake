@@ -26,7 +26,18 @@ regle_t* createRegleHash(char* nom, char** prerequis, int lenPrerequis, char** c
 	return r;
 }
 
-void freeRegle(regle_t* r){
+void freeRegle(regle_t* r, int isPseudo){
+	if(isPseudo == 0){
+		free(r->nom); // On libère le nom
+		
+		for(int i = 0; i < r->lenPrerequis; i++){ // Chaque prérequis
+			free(r->prerequis[i]);
+		}
+		free(r->prerequis);	// Le tableau lui-même
+		
+		freeListeCommands(r->commandes);	
+	}
+
 	free(r);
 }
 

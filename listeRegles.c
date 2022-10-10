@@ -15,11 +15,25 @@ void freeListeRegle(listeRegles_t* list){
 		listeRegles_t* next = list->next;
 		
 		if(estFichier(list->regle->nom) == 1){ // Il s'agit d'une pseudo-règle (cf createListeRegleFromPre)
-			freeRegle(list->regle);
+			freeRegle(list->regle, 1);
 		}
 		
 		free(list);
 		freeListeRegle(next);
+	}
+}
+
+void freeListeRegleAndContent(listeRegles_t* list){
+	if(list != NULL){
+		listeRegles_t* next = list->next;
+
+		if(estFichier(list->regle->nom) == 1){ // Il s'agit d'une pseudo-règle (cf createListeRegleFromPre)
+			freeRegle(list->regle, 1); // Normalement on en a pas ici
+		}
+
+		freeRegle(list->regle, 0);
+		free(list);
+		freeListeRegleAndContent(next);
 	}
 }
 

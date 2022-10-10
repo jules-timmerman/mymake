@@ -10,14 +10,14 @@
 
 listeRegles_t* makefile2list(FILE* makefile){
 	char *ligne_buffer = NULL; // Stockage de la ligne courante
-	size_t tailleLigne_buffer;
-	ssize_t tailleLigne; // Taille de la ligne courante, en comptant \n
+	size_t tailleLigne_buffer = 0;
+	ssize_t tailleLigne = 0; // Taille de la ligne courante, en comptant \n
 	
 	bool pushed = true; // true si la dernière règle a été incluse dans la liste de règles
 	char *token;
 	regle_t* nouvelleRegle = createRegle(token, NULL , 0, NULL);
-	listeRegles_t* liste;
-	listeCommandes_t* nouvelleListeCommandes;
+	listeRegles_t* liste = createListeRegle();
+	listeCommandes_t* nouvelleListeCommandes = createListeCommands();
 	tailleLigne = getline(&ligne_buffer, &tailleLigne_buffer, makefile);
 
 	while(tailleLigne>=0){
@@ -31,7 +31,14 @@ listeRegles_t* makefile2list(FILE* makefile){
 		}
 		else if (*ligne_buffer != 9) { // pas de tabulation -> nouvelle règle !
 			pushed = false; // Cette règle n'est pas encore dans liste
-			token = strtok(ligne_buffer, ":"); // Nom de la règle (avant ":" dans la ligne)
+			
+			char* copyLigne = malloc(strlen(ligne_buffer) + 1); // On crée une copie car strtok change la chaîne et on veut faire 2 parcours
+			strcpy(copyLigne, ligne_buffer);
+
+			token = strtok(copyLigne, ":"); // Nom de la règle (avant ":" dans la ligne)
+			char* nom = malloc(sizeof(strlen(token)) + 1); // On malloc pour le nom (pour garder après l'exec), +1 pour nullbyte
+			strcpy(nom, token);
+
 			printf("Nom nouvelleRegle : %s\n", token);
 			int lenPrerequis = 0;
 			token = strtok(NULL, " "); 
@@ -41,17 +48,20 @@ listeRegles_t* makefile2list(FILE* makefile){
 				token = strtok(NULL, " ");
 			};
 
-			char* prerequis[lenPrerequis];
+			char** prerequis = malloc(sizeof(char*) * lenPrerequis); // On doit malloc pour que ce ne soit pas détruit au retour
 			token = strtok(ligne_buffer, ":"); // On repart au premier prérequis
 			token = strtok(NULL, " ");
 			for (int i=0 ; i< lenPrerequis; i++) {
-				prerequis[i] = token;
+				prerequis[i] = malloc(strlen(token) + 1); // Pour rajouter le nullbyte
+				strcpy(prerequis[i], token); // On copie
 				token = strtok(NULL, " "); // Suivant !
 			};
-			nouvelleRegle->lenPrerequis = lenPrerequis;
-			nouvelleRegle->prerequis = prerequis;
-			
+			nouvelleListeCommandes = createListeCommands();
+			nouvelleRegle = createRegle(nom, prerequis, lenPrerequis, nouvelleListeCommandes);
+
 			printf("Nombre prerequis : %d\n", lenPrerequis);
+
+			free(copyLigne); // On free
 		}
 		else { // C'est une ligne de commande !
 			ligne_buffer++; // Pour négliger la tabulation, on saute une case mémoire (surement optionnel)
@@ -67,6 +77,9 @@ listeRegles_t* makefile2list(FILE* makefile){
 		liste = addRegle(liste, nouvelleRegle);
 	}
 	else {}
+
+	free(ligne_buffer); // Cf docu getline : on doit free
+
 	return liste;
 }
 
@@ -141,17 +154,13 @@ void makeWHash(listeRegles_t* list, regle_t* regle){
 }
 
 
-
-
-
-// TODO : Pas oublier de free les règles quelques part (soit à la fin de make, soit dans main)
-
 int main(int argc, char** argv){
 	if(argc <= 1){ // On a pas donné d'argument
 		printf("Usage : mymake <cible>");
 		return 1;
 	}else{
 		char* cible = argv[1];
+		printf("Construction de la cible : %s \n", cible);
 		FILE* makefile = fopen("Makefile", "r");
 		if(makefile == NULL){
 			printf("Impossible d'ouvrir le fichier Makefile");
@@ -159,7 +168,8 @@ int main(int argc, char** argv){
 		}
 		listeRegles_t* list = makefile2list(makefile);
 		make_naive(list, rechercheRegle(list, cible));
+		
+		freeListeRegleAndContent(list);
+		fclose(makefile);
 	}
-	// FINIR LES FREE
-
 }

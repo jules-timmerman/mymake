@@ -61,6 +61,9 @@ Module.symvers
 Mkfile.old
 dkms.conf
 
+# VSCode 
+.vscode/*
+
 # Projet de test
 rapport.aux
 rapport.log
@@ -75,9 +78,7 @@ testproj/c.h
 testproj/d.c
 testproj/d.h
 testproj/main.c
-.vscode/settings.json
 main
 testproj/mymake
 mymake
 .vscode/launch.json
-.vscode/tasks.json
