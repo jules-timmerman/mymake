@@ -78,3 +78,6 @@ testproj/main.c
 .vscode/settings.json
 main
 testproj/mymake
+mymake
+.vscode/launch.json
+.vscode/tasks.json

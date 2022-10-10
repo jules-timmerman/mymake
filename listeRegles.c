@@ -58,7 +58,7 @@ regle_t* rechercheRegle(listeRegles_t* list, char* nom){
 	if (list == NULL){
 		return NULL;
 	}
-	else if (strcmp(list->regle->nom, nom)) {
+	else if (strcmp(list->regle->nom, nom) == 0) {
 		return list->regle;
 	}
 	else {
