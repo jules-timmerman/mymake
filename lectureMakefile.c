@@ -64,6 +64,7 @@ listeRegles_t* makefile2list(FILE* makefile){
 		nouvelleRegle->commandes = revList(nouvelleListeCommandes);
 		liste = addRegle(liste, nouvelleRegle);
 	}
+	
 	else {}
 	return createListeRegle();
 	//return liste;
