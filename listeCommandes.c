@@ -55,7 +55,7 @@ listeCommandes_t* revList(listeCommandes_t* list){
 		nouvelleListe->commande = list->commande;
 		listeCommandes_t* acc = list->next;
 		while (acc != NULL){
-			addCommande(nouvelleListe, acc->commande); // On ajoute la suivante en tête
+			nouvelleListe = addCommande(nouvelleListe, acc->commande); // On ajoute la suivante en tête
 			acc = acc->next; // On regarde la suite
 		}
 		freeListeCommands(list); // On a crée une nouvelle liste donc on free l'ancienne
@@ -68,6 +68,7 @@ void execCommandes(listeCommandes_t* list){
 	if(list == NULL){ // Bout de liste, cas d'arrêt
 		return;
 	}
+	printf("%s\n", list->commande);
 	system(list->commande);
 	execCommandes(list->next);
 }

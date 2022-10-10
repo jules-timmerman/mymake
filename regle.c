@@ -12,6 +12,7 @@ regle_t* createRegle(char* nom, char** prerequis, int lenPrerequis, listeCommand
 	regle_t* r = malloc(sizeof(regle_t));
 	r->nom = nom;
 	r->prerequis = prerequis;
+	r->lenPrerequis = lenPrerequis;
 	r->commandes = commandes;
 	r->lastModified = getLastModified(nom);	
 	return r;
@@ -21,6 +22,7 @@ regle_t* createRegleHash(char* nom, char** prerequis, int lenPrerequis, listeCom
 	regle_t* r = malloc(sizeof(regle_t));
 	r->nom = nom;
 	r->prerequis = prerequis;
+	r->lenPrerequis = lenPrerequis;
 	r->commandes = commandes;
 	r->hashModified = hashWasModified(nom);
 	return r;

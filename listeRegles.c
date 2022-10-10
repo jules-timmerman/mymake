@@ -55,11 +55,11 @@ listeRegles_t* createListeRegleFromPre(listeRegles_t* list, regle_t* regle){
 			// On passe par createRegle pour pouvoir bien initialiser le hash etc...
 			regle_t* r = createRegle(regle->prerequis[i], NULL, 0, NULL); 
 
-			addRegle(retList, r);
+			retList = addRegle(retList, r);
 		}else{
 			regle_t* r = rechercheRegle(list, regle->prerequis[i]); // On cherche le ieme prerequis dans la liste
 			if(r != NULL){ // Si on a trouvé une règle correspondant au ieme prérequis
-				addRegle(retList, r); // On l'ajoute à notre liste de retour
+				retList = addRegle(retList, r); // On l'ajoute à notre liste de retour
 			}
 		}
 	}
