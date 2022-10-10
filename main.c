@@ -146,7 +146,7 @@ void makeWHash(listeRegles_t* list, regle_t* regle){
 
 // TODO : Pas oublier de free les règles quelques part (soit à la fin de make, soit dans main)
 
-void main(int argc, char** argv){
+int main(int argc, char** argv){
 	if(argc <= 1){ // On a pas donné d'argument
 		printf("Usage : mymake <cible>");
 		return 1;
