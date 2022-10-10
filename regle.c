@@ -58,7 +58,7 @@ int estFichier(char* nom){
 // Cherche dans le fichier .hash
 // Format de .hash : nom hash
 int hashWasModified(char* nom){
-	FILE* f = fopen(".hash", "r");
+	FILE* f = fopen(".hash", "rw");
 	if(f == NULL){
 		printf("Couldn't open .hash (no file or problem ?)");
 		return 1; // Renvoie 1 : dans le doute, on va recompiler 
@@ -74,12 +74,24 @@ int hashWasModified(char* nom){
 			char* h = strotk(NULL, " "); // Lit le hash de la dernière compil
 			unsigned long hAsL = strtoul(h, NULL, 0); // On convertit en hash
 			unsigned long currentHash = hashFile(nom); // Calcule le hash actuel
+			if(hAsL != currentHash){ // Le hash a été changé : on le met à jour dans .hash
+				updateHash(nom, currentHash, f);
+			}
 			fclose(f); // On ferme les ressources
 			return hAsL != currentHash; // On compare les hashs
 		}
 	}
 
+	// On arrive ici : on a jamais trouvé dans le ficher : on ajoute à la fin 
+
+
 	fclose(f);
 
 	return 1; // On a jamais trouvé => nouveau fichier (ou dans le doute on recompil)
+}
+
+void updateHash(char* nom, unsigned long hash, FILE* f){ // Modifie le nouveau hash
+
+
+
 }
