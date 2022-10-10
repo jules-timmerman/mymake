@@ -136,6 +136,7 @@ void make(listeRegles_t* list, regle_t* regle){
 	if(lastChildModif > regle->lastModified){ // On a modifié une dépendance plus récemment : on recompile
 		// On compile notre règle
 		execCommandes(regle->commandes);
+		updateLastModified(regle); // On met à jour la dernière modification pour les parents
 	}
 
 	freeListeRegle(listPre, 0); // On free ce qu'on a utilisé
@@ -184,7 +185,7 @@ int main(int argc, char** argv){
 			return 1;
 		}
 		listeRegles_t* list = makefile2list(makefile);
-		make_naive(list, rechercheRegle(list, cible));
+		make(list, rechercheRegle(list, cible));
 		
 		freeListeRegle(list, 1);
 		fclose(makefile);

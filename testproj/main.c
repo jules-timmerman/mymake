@@ -2,7 +2,7 @@
 #include "d.h"
 
 int main() {
-    c();
+    c(); // test
     d();
     return 0;
 }

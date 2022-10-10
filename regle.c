@@ -43,6 +43,11 @@ void freeRegle(regle_t* r, int isPseudo){
 	free(r);
 }
 
+void updateLastModified(regle_t* r){
+	r->lastModified = getLastModified(r->nom);
+}
+
+
 time_t getLastModified(char* file){
 	struct stat *stats = malloc(sizeof(struct stat)); 
 	stat(file, stats);

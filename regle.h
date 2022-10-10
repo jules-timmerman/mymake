@@ -21,7 +21,7 @@ void freeRegle(regle_t* r, int isPseudo); // Le booléen nous permet de savoir s
 
 regle_t* createRegleHash(char* nom, char** prerequis, int lenPrerequis, listeCommandes_t* commandes);
 
-
+void updateLastModified(regle_t* r);
 time_t getLastModified(char* file); // Récupère la date de modification du fichier
 int estFichier(char* nom); // Vérifie si la règle réfère à un fichier
 
