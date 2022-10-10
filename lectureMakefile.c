@@ -32,6 +32,7 @@ listeRegles_t* makefile2list(FILE* makefile){
 			pushed = false; // Cette règle n'est pas encore dans liste
 			token = strtok(ligne_buffer, ":"); // Nom de la règle (avant ":" dans la ligne)
 			printf("Nom nouvelleRegle : %s\n", token);
+			char* nom = token;
 			int lenPrerequis = 0;
 			token = strtok(NULL, " "); 
 			// Comptage du nombre de prérequis
@@ -47,9 +48,7 @@ listeRegles_t* makefile2list(FILE* makefile){
 				prerequis[i] = token;
 				token = strtok(NULL, " "); // Suivant !
 			};
-			nouvelleRegle->lenPrerequis = lenPrerequis;
-			nouvelleRegle->prerequis = prerequis;
-			
+			nouvelleRegle = createRegle(nom, prerequis, lenPrerequis, NULL);			
 			printf("Nombre prerequis : %d\n", lenPrerequis);
 		}
 		else { // C'est une ligne de commande !

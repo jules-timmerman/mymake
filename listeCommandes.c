@@ -27,7 +27,7 @@ listeCommandes_t* addCommande(listeCommandes_t* list, char* c){
 	return retList;
 }
 
-
+/*
 listeCommandes_t* auxRevList(listeCommandes_t* list1, listeCommandes_t* list2){
 		if (list1 == NULL){
 			return list2;
@@ -42,6 +42,26 @@ listeCommandes_t* revList(listeCommandes_t* list){
 	listeCommandes_t* init = createListeCommands();
 	listeCommandes_t* renverse = list;
 	return renverse;
+}
+*/
+
+listeCommandes_t* revList(listeCommandes_t* list){
+	if (list == NULL){
+		return NULL;
+	}
+	else{
+		listeCommandes_t* nouvelleListe;
+		nouvelleListe->next = NULL;
+		nouvelleListe->commande = list->commande;
+		listeCommandes_t* acc = list->next;
+		while (acc != NULL){
+			nouvelleListe->next = nouvelleListe;
+			nouvelleListe->commande = acc->commande;
+			acc = acc->next;
+		};
+		freeListeCommands(list);
+		return(nouvelleListe);
+	};
 }
 
 
