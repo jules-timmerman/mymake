@@ -54,7 +54,7 @@ listeRegles_t* createListeRegleFromPre(listeRegles_t* list, regle_t* regle){
 
 
 // Renvoie un pointeur vers la regle nommée [nom], et NULL si une telle regle n'existe pas
-regle_t* rechercheRegle(listeRegles_t* list, char nom){
+regle_t* rechercheRegle(listeRegles_t* list, char* nom){
 	if (list == NULL){
 		return NULL;
 	}
