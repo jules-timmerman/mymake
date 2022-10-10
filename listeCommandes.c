@@ -50,17 +50,16 @@ listeCommandes_t* revList(listeCommandes_t* list){
 		return NULL;
 	}
 	else{
-		listeCommandes_t* nouvelleListe;
+		listeCommandes_t* nouvelleListe = malloc(sizeof(listeCommandes_t));
 		nouvelleListe->next = NULL;
 		nouvelleListe->commande = list->commande;
 		listeCommandes_t* acc = list->next;
 		while (acc != NULL){
-			nouvelleListe->next = nouvelleListe;
-			nouvelleListe->commande = acc->commande;
-			acc = acc->next;
-		};
-		freeListeCommands(list);
-		return(nouvelleListe);
+			addCommande(nouvelleListe, acc->commande); // On ajoute la suivante en tête
+			acc = acc->next; // On regarde la suite
+		}
+		freeListeCommands(list); // On a crée une nouvelle liste donc on free l'ancienne
+		return nouvelleListe;
 	};
 }
 
