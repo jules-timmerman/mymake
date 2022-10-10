@@ -77,3 +77,4 @@ testproj/d.h
 testproj/main.c
 .vscode/settings.json
 main
+testproj/mymake
