@@ -19,6 +19,9 @@ typedef struct regle regle_t; // Creation de la regle
 regle_t* createRegle(char* nom, char** prerequis, int lenPrerequis, listeCommandes_t* commandes);
 void freeRegle(regle_t* r, int isPseudo); // Le booléen nous permet de savoir s'il s'agit d'une pseudo-règle ou pas
 
+regle_t* createRegleHash(char* nom, char** prerequis, int lenPrerequis, listeCommandes_t* commandes);
+
+
 time_t getLastModified(char* file); // Récupère la date de modification du fichier
 int estFichier(char* nom); // Vérifie si la règle réfère à un fichier
 

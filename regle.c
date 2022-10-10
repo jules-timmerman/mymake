@@ -17,7 +17,7 @@ regle_t* createRegle(char* nom, char** prerequis, int lenPrerequis, listeCommand
 	return r;
 }
 
-regle_t* createRegleHash(char* nom, char** prerequis, int lenPrerequis, char** commandes, int lenCommandes){
+regle_t* createRegleHash(char* nom, char** prerequis, int lenPrerequis, listeCommandes_t* commandes){
 	regle_t* r = malloc(sizeof(regle_t));
 	r->nom = nom;
 	r->prerequis = prerequis;
@@ -79,7 +79,7 @@ int hashWasModified(char* nom){
 	size_t n = 0;
 
 
-	while(getline(line, &n, f) != -1){ // On lit jusqu'à l'EOF dans le pire des cas
+	while(getline(&line, &n, f) != -1){ // On lit jusqu'à l'EOF dans le pire des cas
 		char* s = strtok(line, " ");
 		if(s == nom){ // La règle correspondante
 			char* h = strtok(NULL, " "); // Lit le hash de la dernière compil
@@ -102,7 +102,7 @@ int hashWasModified(char* nom){
 }
 
 void updateHash(char* nom, unsigned long hash, FILE* f){ // Modifie le nouveau hash
-
+	// TODO : faire la fonction ducon
 
 
 }
