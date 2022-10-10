@@ -4,6 +4,7 @@
 
 #include <stdlib.h>
 #include <sys/stat.h>
+#include <string.h>
 #include <unistd.h>
 
 
@@ -70,7 +71,7 @@ int hashWasModified(char* nom){
 	while(getline(line, &n, f) != -1){ // On lit jusqu'à l'EOF dans le pire des cas
 		char* s = strtok(line, " ");
 		if(s == nom){ // La règle correspondante
-			char* h = strotk(NULL, " "); // Lit le hash de la dernière compil
+			char* h = strtok(NULL, " "); // Lit le hash de la dernière compil
 			unsigned long hAsL = strtoul(h, NULL, 0); // On convertit en hash
 			unsigned long currentHash = hashFile(nom); // Calcule le hash actuel
 			if(hAsL != currentHash){ // Le hash a été changé : on le met à jour dans .hash

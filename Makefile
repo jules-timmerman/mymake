@@ -1,5 +1,5 @@
-main: main.o regle.o listeRegles.o
-	gcc -o main main.o regle.o listeRegles.o
+main: main.o regle.o listeRegles.o hash.o listeCommandes.o
+	gcc -o main main.o regle.o listeRegles.o hash.o listeCommandes.o
 
 main.o: main.c regle.h listeRegles.h
 	gcc -c main.c
@@ -9,3 +9,9 @@ regle.o : regle.c regle.h
 
 listeRegles.o : listeRegles.c listeRegles.h regle.h
 	gcc -c listeRegles.c
+
+hash.o : hash.c hash.h
+	gcc -c hash.c
+
+listeCommandes.o : listeCommandes.c listeCommandes.h
+	gcc -c listeCommandes.c
