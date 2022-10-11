@@ -109,28 +109,13 @@ arc=0mm
 \caption{Code source de \texttt{#1}}
 \label{code:#1}
 \end{figure}
-
-
 }
 
-%\newcommand{\Codesource}[2]{
-%\begin{code}[]{\texttt{ #1 }}
-%\lstinputlisting{ #2 }
-%\end{code}
-%}
 
 
 \title{MyMake}
 \date{Octobre 2022}
 \author{Guilhem Repetto \and Jules Timmerman}
-
-
-
-
-
-
-
-
 
 
 \begin{document}
@@ -143,8 +128,7 @@ arc=0mm
 
 
 
-
-\begin{question}
+\begin{question} %% Question 1
 Pour créer le fichier \texttt{Makefile}, il faut comprendre la dépendance entre les fichiers du projet.
 Nous voulons compiler un fichier exécutable \texttt{main} à partir du fichier \texttt{main.c}.
 
@@ -186,10 +170,15 @@ On peut alors en déduire le fichier \texttt{Makefile} (figure \ref{code:Makefil
 \end{question}
 
 
+\newpage
 
 
-\begin{question}
+\begin{question} %% Question 2
 
+\begin{figure}[h]
+\lstinputlisting[firstline=8,lastline=16, language=c]{regle.c}
+\caption{Code source de }
+\end{figure}
 
 \Codesource{regle.h}{regle.h}
 \Codesource{regle.c}{regle.c}
@@ -199,12 +188,29 @@ On peut alors en déduire le fichier \texttt{Makefile} (figure \ref{code:Makefil
 
 \end{question}
 
-\begin{question}
+\begin{question} %% Question 3
 
 On obtient le fichier suivant 
 \Codesource{Makefile}{Makefile}
 
 \end{question}
+
+\begin{question} %% Question 4
+
+\end{question}
+
+\begin{question} %% Question 5
+
+\end{question}
+
+\begin{question} %% Question 6
+
+\end{question}
+
+\begin{question} %% Question 7
+
+\end{question}
+
 
 
 

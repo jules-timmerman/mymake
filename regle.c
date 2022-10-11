@@ -1,7 +1,5 @@
 #include "regle.h"
-
 #include "hash.h"
-
 #include <stdlib.h>
 #include <sys/stat.h>
 #include <string.h>
@@ -47,7 +45,6 @@ void updateLastModified(regle* r){
 	r->lastModified = getLastModified(r->nom);
 }
 
-
 time_t getLastModified(char* file){
 	struct stat *stats = malloc(sizeof(struct stat)); 
 	stat(file, stats);
@@ -58,7 +55,6 @@ time_t getLastModified(char* file){
 
 	return t;
 }
-
 
 // TODO : optimisation en lisant par la fin ?
 // 1 : fichier (.h / .c)
@@ -72,7 +68,6 @@ int estFichier(char* nom){
 	return 0;
 }
 
-
 // Cherche dans le fichier .hash
 // Format de .hash : nom hash
 int hashWasModified(char* nom){
@@ -84,7 +79,6 @@ int hashWasModified(char* nom){
 
 	char* line = NULL;
 	size_t n = 0;
-
 
 	while(getline(&line, &n, f) != -1){ // On lit jusqu'à l'EOF dans le pire des cas
 		char* s = strtok(line, " ");
@@ -110,6 +104,5 @@ int hashWasModified(char* nom){
 
 void updateHash(char* nom, unsigned long hash, FILE* f){ // Modifie le nouveau hash
 	// TODO : faire la fonction ducon
-
 
 }
