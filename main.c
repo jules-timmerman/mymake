@@ -173,21 +173,21 @@ void makeWHash(listeRegles_t* list, regle_t* regle){
 
 
 int main(int argc, char** argv){
-	if(argc <= 1){ // On a pas donné d'argument
-		printf("Usage : mymake <cible>");
-		return 1;
-	}else{
-		char* cible = argv[1];
-		printf("Construction de la cible : %s \n", cible);
 		FILE* makefile = fopen("Makefile", "r");
 		if(makefile == NULL){
 			printf("Impossible d'ouvrir le fichier Makefile");
 			return 1;
 		}
 		listeRegles_t* list = makefile2list(makefile);
+		char* cible;
+		if(argc <= 1){ // On a pas donné d'argument
+			cible = list->regle->nom;
+		}
+		else {
+			cible = argv[1];
+		}
 		make(list, rechercheRegle(list, cible));
 		
 		freeListeRegle(list, 1);
 		fclose(makefile);
-	}
 }
