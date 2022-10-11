@@ -39,8 +39,8 @@ listeRegles* addRegle(listeRegles* list, regle* r){
 listeRegles* createListeRegleFromPre(listeRegles* list, regle* r){
 	listeRegles* retList = createListeRegle(); // Liste vide que l'on retournera
 
-	for(int i = 0; i < regle->lenPrerequis; i++){
-		if(isFile(regle->prerequis[i]) == 1){ // Les .h / .c n'ont pas de règles dans list : on crée une pseudo règle pour faciliter l'écriture du programme
+	for(int i = 0; i < r->lenPrerequis; i++){
+		if(isFile(r->prerequis[i]) == 1){ // Les .h / .c n'ont pas de règles dans list : on crée une pseudo règle pour faciliter l'écriture du programme
 			// On freera la pseudo-règle en même temps que le retour de la fonction
 			// On passe par createRegle pour pouvoir bien initialiser le hash etc...
 			regle* retR = createRegle(r->prerequis[i], NULL, 0, NULL); 
