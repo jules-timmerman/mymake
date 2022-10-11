@@ -1,7 +1,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include <stdbool.h>
 
 #include "regle.h"
 #include "listeRegles.h"
@@ -13,7 +12,7 @@ listeRegles_t* makefile2list(FILE* makefile){
 	size_t tailleLigne_buffer = 0;
 	ssize_t tailleLigne = 0; // Taille de la ligne courante, en comptant \n
 	
-	bool pushed = true; // true si la dernière règle a été incluse dans la liste de règles
+	int pushed = 1; // bool : 1 si dernière règle a été incluse dans liste de règles
 	char *token;
 	regle_t* nouvelleRegle = NULL;
 	listeRegles_t* liste = createListeRegle();
@@ -25,12 +24,12 @@ listeRegles_t* makefile2list(FILE* makefile){
 			if (!pushed){ // On complète et ajoute la règle si ce n'est déjà fait (il peut y avoir plusieurs \n)
 				nouvelleRegle->commandes = revListCommande(nouvelleListeCommandes); // Renversée -> ordre de lecture
 				liste = addRegle(liste, nouvelleRegle);
-				pushed = true;
+				pushed = 1;
 			}
 			else {}
 		}
 		else if (*ligne_buffer != 9) { // pas de tabulation -> nouvelle règle !
-			pushed = false; // Cette règle n'est pas encore dans liste
+			pushed = 0; // Cette règle n'est pas encore dans liste
 			
 			char* copyLigne = malloc(strlen(ligne_buffer) + 1); // On crée une copie car strtok change la chaîne et on veut faire 2 parcours
 			char* memCopyLigne = copyLigne; // On garde en mémoire le début pour pouvoir free à la fin
@@ -106,7 +105,7 @@ listeRegles_t* makefile2list(FILE* makefile){
 // TODO : Optimisation sans iter ?
 // Q6 : version naive
 void make_naive(listeRegles_t* list, regle_t* regle){
-	if(estFichier(regle->nom) == 1){ // Cas de base
+	if(isFile(regle->nom) == 1){ // Cas de base
 		return; // Rien à faire
 	}
 	// Sinon : on construit récursivement
@@ -122,7 +121,7 @@ void make_naive(listeRegles_t* list, regle_t* regle){
 // TODO : idem Q6
 // Q7 : la bonne version 
 void make(listeRegles_t* list, regle_t* regle){
-	if(estFichier(regle->nom) == 1){ // Cas de base
+	if(isFile(regle->nom) == 1){ // Cas de base
 		return; // Rien à faire
 	}
 
@@ -151,7 +150,7 @@ void make(listeRegles_t* list, regle_t* regle){
 // Make with hash
 // Version utilisant le hash et non la date de modification
 void makeWHash(listeRegles_t* list, regle_t* regle){
-	if(estFichier(regle->nom) == 1){ // Cas de base
+	if(isFile(regle->nom) == 1){ // Cas de base
 		return; // Rien à faire
 	}
 

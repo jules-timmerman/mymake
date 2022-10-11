@@ -14,7 +14,7 @@ void freeListeRegle(listeRegles_t* list, int freeContent){ // Booléen si on lib
 	if(list != NULL){
 		listeRegles_t* next = list->next;
 		
-		if(estFichier(list->regle->nom) == 1){ // Il s'agit d'une pseudo-règle (cf createListeRegleFromPre)
+		if(isFile(list->regle->nom) == 1){ // Il s'agit d'une pseudo-règle (cf createListeRegleFromPre)
 			freeRegle(list->regle, 1);
 		}
 
@@ -40,7 +40,7 @@ listeRegles_t* createListeRegleFromPre(listeRegles_t* list, regle_t* regle){
 	listeRegles_t* retList = createListeRegle(); // Liste vide que l'on retournera
 
 	for(int i = 0; i < regle->lenPrerequis; i++){
-		if(estFichier(regle->prerequis[i]) == 1){ // Les .h / .c n'ont pas de règles dans list : on crée une pseudo règle pour faciliter l'écriture du programme
+		if(isFile(regle->prerequis[i]) == 1){ // Les .h / .c n'ont pas de règles dans list : on crée une pseudo règle pour faciliter l'écriture du programme
 			// On freera la pseudo-règle en même temps que le retour de la fonction
 			// On passe par createRegle pour pouvoir bien initialiser le hash etc...
 			regle_t* r = createRegle(regle->prerequis[i], NULL, 0, NULL); 

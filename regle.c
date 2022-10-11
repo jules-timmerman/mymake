@@ -28,15 +28,12 @@ regle_t* createRegleHash(char* nom, char** prerequis, int lenPrerequis, listeCom
 void freeRegle(regle_t* r, int isPseudo){
 	if(isPseudo == 0){
 		free(r->nom); // On libère le nom
-		
 		for(int i = 0; i < r->lenPrerequis; i++){ // Chaque prérequis
 			free(r->prerequis[i]);
 		}
 		free(r->prerequis);	// Le tableau lui-même
-		
 		freeListeCommands(r->commandes, 1); // Ici on free le contenu avec (c'est la fin)	
 	}
-
 	free(r);
 }
 
@@ -55,16 +52,13 @@ time_t getLastModified(char* file){
 	return t;
 }
 
-// TODO : optimisation en lisant par la fin ?
-// 1 : fichier (.h / .c)
-// 0 sinon
-int estFichier(char* nom){
-	if(strstr(nom, ".h") != NULL){ // On a trouvé
-		return 1;
-	}else if(strstr(nom, ".c") != NULL){
-		return 1;
+// Test si extension fichier en (.h / .c)
+int isFile(char* nom){
+	int length = strlen(nom);
+	if (length<2){
+		return 0;
 	}
-	return 0;
+	return (nom[length-2] == '.' && (nom[length-1] == 'c' || nom[length-1] == 'h'));
 }
 
 // Cherche dans le fichier .hash
@@ -93,8 +87,7 @@ int hashWasModified(char* nom){
 		}
 	}
 
-	// On arrive ici : on a jamais trouvé dans le ficher : on ajoute à la fin 
-
+	// On arrive ici : on n'a jamais trouvé dans le ficher : on ajoute à la fin 
 
 	fclose(f);
 
