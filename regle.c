@@ -1,5 +1,7 @@
 #include "regle.h"
+
 #include "hash.h"
+#include "sha256.h"
 #include <stdlib.h>
 #include <sys/stat.h>
 #include <string.h>
@@ -65,37 +67,54 @@ int isFile(char* nom){
 // Cherche dans le fichier .hash
 // Format de .hash : nom hash
 int hashWasModified(char* nom){
-	FILE* f = fopen(".hash", "rw");
+	FILE* f = fopen(".hash", "r+"); // r+ lecture et écriture depuis le début du fichier sans écraser tout.
 	if(f == NULL){
 		printf("Couldn't open .hash (no file or problem ?)");
 		return 1; // Renvoie 1 : dans le doute, on va recompiler 
 	}
 
+	unsigned char currentHash[SHA256_BLOCK_SIZE + 1];
+	currentHash[SHA256_BLOCK_SIZE] = '\0'; // On rajoute le \0 pour pouvoir utiliser la chaîne ensuite (dans strcmp etc...) (j'imagine que sha ne le rajoute pas)
+	hashFile(nom, currentHash); // Calcule le hash actuel
+
+
 	char* line = NULL;
 	size_t n = 0;
 
-	while(getline(&line, &n, f) != -1){ // On lit jusqu'à l'EOF dans le pire des cas
+	while(getline(&line, &n, f) != -1){ // On lit jusqu'à l'EOF dans le pire des cas à la recherche de notre nom (le fichier)
 		char* s = strtok(line, " ");
-		if(s == nom){ // La règle correspondante
-			char* h = strtok(NULL, " "); // Lit le hash de la dernière compil
-			unsigned long hAsL = strtoul(h, NULL, 0); // On convertit en hash
-			unsigned long currentHash = hashFile(nom); // Calcule le hash actuel
-			if(hAsL != currentHash){ // Le hash a été changé : on le met à jour dans .hash
-				updateHash(nom, currentHash, f);
+		if(strcmp(s, nom) == 0){ // La règle correspondante (on a trouvé)
+			char* h = strtok(NULL, "\n"); // Lit le hash de la dernière compil (sans le \n)
+			
+			int b = strcmp(h, currentHash); // Le booléen de s'il y a eu un changement
+			if(b == 0){ // Le hash a été changé : on le met à jour dans .hash pour la prochinae compilation
+				updateHash(currentHash, f);
 			}
 			fclose(f); // On ferme les ressources
-			return hAsL != currentHash; // On compare les hashs
+			return b; // On renvoie la comparaison
 		}
 	}
 
 	// On arrive ici : on n'a jamais trouvé dans le ficher : on ajoute à la fin 
+	addHash(nom, currentHash, f);
 
 	fclose(f);
 
 	return 1; // On a jamais trouvé => nouveau fichier (ou dans le doute on recompil)
 }
 
-void updateHash(char* nom, unsigned long hash, FILE* f){ // Modifie le nouveau hash
-	// TODO : faire la fonction ducon
+// On modifie le fichier .hash avec la nouvelle valeur de hash
+// Hypothèse : le curseur de lecture est à la fin de la ligne correspondante
+void updateHash(unsigned char* hash, FILE* f){ // Modifie le nouveau hash
+	fseek(f, -SHA256_BLOCK_SIZE - 1, SEEK_CUR); // On recule de SHA256_BLOCK_SIZE pour la taille du hash et -1 supplémentaire pour le \n
+	fputs(hash, f); // On écrit le hash (par dessus)
+	fseek(f, 1, SEEK_CUR); // On redécale de 1 à l'emplacement initial
+}
 
+void addHash(char* nom, unsigned char* hash, FILE* f){
+	fseek(f, 0, SEEK_END); // On se rend à la fin du fichier
+	fputs("\n", f); // On rajoute un retour à la ligne
+	fputs(nom, f);
+	fputs(" ", f);
+	fputs(hash, f);
 }

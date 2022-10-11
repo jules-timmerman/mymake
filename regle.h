@@ -26,7 +26,7 @@ time_t getLastModified(char* file); // Récupère la date de modification du fic
 int isFile(char* nom); // Vérifie si la règle réfère à un fichier
 
 int hashWasModified(char* nom); // Vérifie s'il y a eu une modification du hash depuis la dernière fois
-void updateHash(char* nom, unsigned long hash, FILE* f); // Modifie le nouveau hash
-
+void updateHash(unsigned char* hash, FILE* f); // Modifie le nouveau hash
+void addHash(char* nom, unsigned char* hash, FILE* f); // Ajoute un nouveau hash au fichier .hash
 
 #endif
