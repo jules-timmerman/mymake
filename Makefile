@@ -4,7 +4,7 @@ main: main.o regle.o listeRegles.o hash.o listeCommandes.o
 main.o: main.c regle.h listeRegles.h
 	gcc -c -g main.c
 
-regle.o : regle.c regle.h 
+regle.o : regle.c regle.h hash.h
 	gcc -c -g regle.c
 
 listeRegles.o : listeRegles.c listeRegles.h regle.h
