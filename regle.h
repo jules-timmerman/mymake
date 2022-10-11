@@ -6,12 +6,12 @@
 #include <stdio.h>
 
 struct regle{
-	char* nom;
-	char** prerequis;
-	int lenPrerequis;
-	listeCommandes* commandes;
-	time_t lastModified; // La dernière modification (en secondes)
-	int hashModified; // Booléen signifiant s'il y a eu une modification depuis la dernière fois (pour le hash)
+	char* nom; // Nom de la règle
+	char** prerequis; // Tableau des prérequis
+	int lenPrerequis; // Taille du tableau
+	listeCommandes_t* commandes; // Liste des commandes à faire
+	time_t lastModified; // Heure de dernière modification (en secondes)
+	int hashModified; // Booléen : 1 si le fichier [nom] modifié depuis la dernière compilation (pour le hash)
 };
 
 typedef struct regle regle; // Creation de la regle
@@ -23,7 +23,7 @@ regle* createRegleHash(char* nom, char** prerequis, int lenPrerequis, listeComma
 
 void updateLastModified(regle* r);
 time_t getLastModified(char* file); // Récupère la date de modification du fichier
-int estFichier(char* nom); // Vérifie si la règle réfère à un fichier
+int isFile(char* nom); // Vérifie si la règle réfère à un fichier
 
 int hashWasModified(char* nom); // Vérifie s'il y a eu une modification du hash depuis la dernière fois
 void updateHash(char* nom, unsigned long hash, FILE* f); // Modifie le nouveau hash

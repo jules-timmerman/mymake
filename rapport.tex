@@ -129,40 +129,40 @@ arc=0mm
 
 
 \begin{question} %% Question 1
-Pour créer le fichier \texttt{Makefile}, il faut comprendre la dépendance entre les fichiers du projet.
-Nous voulons compiler un fichier exécutable \texttt{main} à partir du fichier \texttt{main.c}.
+Pour créer le fichier \textbf{Makefile}, il faut comprendre la dépendance entre les fichiers du projet.
+Nous voulons compiler un fichier exécutable \textbf{main} à partir du fichier \textbf{main.c}.
 
-Tout d'abord, rappelons qu'au minimum, le fichier \texttt{main.c} est transformé par le préprocesseur en un fichier \texttt{main.i}, compilé en un fichier assembleur \texttt{main.s}, puis en un fichier binaire \texttt{main.o}. Enfin, l'étape d'édition des liens utilise \texttt{main.o} ainsi que tous les fichiers binaires (en \texttt{.o}) des bibliothèques et des fichiers annexes déclarés dans le \textit{header} de \texttt{main.c} (fichiers en \texttt{.h}) utilisés pour produire un fichier final exécutable \texttt{main}.
+Tout d'abord, rappelons qu'au minimum, le fichier \textbf{main.c} est transformé par le préprocesseur en un fichier \textbf{main.i}, compilé en un fichier assembleur \textbf{main.s}, puis en un fichier binaire \textbf{main.o}. Enfin, l'étape d'édition des liens utilise \textbf{main.o} ainsi que tous les fichiers binaires (en \textbf{.o}) des bibliothèques et des fichiers annexes déclarés dans le \textit{header} de \textbf{main.c} (fichiers en \textbf{.h}) utilisés pour produire un fichier final exécutable \textbf{main}.
 
 
-Pour produire \texttt{main}, le compilateur a donc besoin du fichier \texttt{main.o}. Dans notre cas, les fichiers \texttt{c.h} et \texttt{d.h} sont déclarés en \textit{header}, ce qui implique que les fichiers \texttt{c.o} et \texttt{d.o} sont aussi demandés. De plus, les fichiers \texttt{a.h} et \texttt{b.h} sont demandés par \texttt{c.h}, et \texttt{a.h} est demandé par \texttt{d.h}. Pour compiler le fichier \texttt{main}, il faut donc avoir accès aux fichiers \texttt{main.o}, \texttt{a.o}, \texttt{b.o}, \texttt{c.o} et \texttt{d.o}.
-On ajoute donc les lignes suivantes au fichier \texttt{Makefile} :
+Pour produire \textbf{main}, le compilateur a donc besoin du fichier \textbf{main.o}. Dans notre cas, les fichiers \textbf{c.h} et \textbf{d.h} sont déclarés en \textit{header}, ce qui implique que les fichiers \textbf{c.o} et \textbf{d.o} sont aussi demandés. De plus, les fichiers \textbf{a.h} et \textbf{b.h} sont demandés par \textbf{c.h}, et \textbf{a.h} est demandé par \textbf{d.h}. Pour compiler le fichier \textbf{main.c}, il faut donc avoir accès aux fichiers \textbf{main.o}, \textbf{a.o}, \textbf{b.o}, \textbf{c.o} et \textbf{d.o}.
+On ajoute donc les lignes suivantes au fichier \textbf{Makefile} :
 \begin{verbatim}
 main: main.o a.o b.o c.o d.o
     gcc -o main main.o a.o b.o c.o d.o
 \end{verbatim}
 
-Pour le reste, on construit alors un graphe de dépendance (voir figure \ref{fig:dependance_test}), où $\mathtt{x}\rightarrow \mathtt{y}$ signifie que le fichier \texttt{y} a besoin du fichier \texttt{x} pour être compilé.
+Pour le reste, on construit alors un graphe de dépendance (voir figure \ref{fig:dependance_test}), où $\mathbf{x}\rightarrow \mathbf{y}$ signifie que le fichier \textbf{y} a besoin du fichier \textbf{x} pour être compilé.
 
 
 \begin{figure}[h]
 \centering
 % https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBpiBdUkANwEMAbAVxiRAB12cYAPHf4FAB0AYwC+IMaXSZc+QijIBGKrUYs2nbnwHCAFhKkzseAkTIAmVfWatEHLr345gdUYekgMJ+edIBma3U7B21nVyEDSU9vOTNFUgAWINtNRx0XEXdo4ziFElIAVhSNey0nASyooy9ZU3yyADYSkPKM4AAjbJrY+r8Adha0sIEu6pi63xQLUhVqG1LQipdhCA9cvumAobL08Lc1nNqfeOQZ4vng4eXgLMOeydOZwcvU3ZGXLvuJk-zEpJ2S3aAFs6FgwOtjnkiP8rK9Fm1wqDwUJ7qoYFAAObwIigABmACcIMCkGQQDgIEgABw1QnEpBKagU6m0okkxAzcmUxAATlZ9MQ-iZ3L5njp7P+XIZxH57MKwulsqQjQViCUSiViH6qvVmqFUrVZIY4JCcAgxqgR3FSH1zMQVOoHRgYEtiBlYrZ1J1Fk1PO9mvV-o9AqUZLtSh9wfZSlt3Ij1D0MDorrATAYDE18oNMcdztd7vxnrVOv1TpdpLEFDEQA
 \begin{tikzcd}
-\texttt{d.c} \arrow[rrd]                          &  &                            &  &                            \\
-\texttt{d.h} \arrow[rr] \arrow[rrrrd]             &  & \texttt{d.o} \arrow[rrddd] &  &                            \\
-\texttt{a.c} \arrow[rrd]                          &  &                            &  & \texttt{main.o} \arrow[dd] \\
-\texttt{a.h} \arrow[rr] \arrow[rrdd] \arrow[rruu] &  & \texttt{a.o} \arrow[rrd]   &  &                            \\
-\texttt{c.c} \arrow[rrd]                          &  &                            &  & \texttt{main}              \\
-\texttt{c.h} \arrow[rr] \arrow[rrrruuu]           &  & \texttt{c.o} \arrow[rru]   &  &                            \\
-\texttt{b.c} \arrow[rrd]                          &  &                            &  &                            \\
-\texttt{b.h} \arrow[rr]                           &  & \texttt{b.o} \arrow[rruuu] &  &                           
+\textbf{d.c} \arrow[rrd]                          &  &                            &  &                            \\
+\textbf{d.h} \arrow[rr] \arrow[rrrrd]             &  & \textbf{d.o} \arrow[rrddd] &  &                            \\
+\textbf{a.c} \arrow[rrd]                          &  &                            &  & \textbf{main.o} \arrow[dd] \\
+\textbf{a.h} \arrow[rr] \arrow[rrdd] \arrow[rruu] &  & \textbf{a.o} \arrow[rrd]   &  &                            \\
+\textbf{c.c} \arrow[rrd]                          &  &                            &  & \textbf{main}              \\
+\textbf{c.h} \arrow[rr] \arrow[rrrruuu]           &  & \textbf{c.o} \arrow[rru]   &  &                            \\
+\textbf{b.c} \arrow[rrd]                          &  &                            &  &                            \\
+\textbf{b.h} \arrow[rr]                           &  & \textbf{b.o} \arrow[rruuu] &  &                           
 \end{tikzcd}
-\caption{Relations de dépendance entre les fichiers du dossier \texttt{test}}
+\caption{Relations de dépendance entre les fichiers du dossier \textbf{test}}
 \label{fig:dependance_test}
 \end{figure}
 
-On peut alors en déduire le fichier \texttt{Makefile} (figure \ref{code:Makefile}).
+Nous pouvons alors en déduire le fichier \textbf{Makefile} (figure \ref{code:Makefile}).
 
 
 \Codesource{Makefile}{testproj/Makefile}
@@ -174,6 +174,21 @@ On peut alors en déduire le fichier \texttt{Makefile} (figure \ref{code:Makefil
 
 
 \begin{question} %% Question 2
+
+Nous créons des fichiers \textbf{regles.c} et \textbf{regles.h}, où l'on définit une structure \texttt{regle} par
+
+\begin{figure}[h]
+\lstinputlisting[firstline=8,lastline=17, language=c]{regle.h}
+\caption{Structure \texttt{regle}}
+\end{figure}
+
+Cette structure est munie des fonctions suivantes :
+
+\begin{figure}[h]
+\lstinputlisting[firstline=19,lastline=29, language=c]{regle.h}
+\caption{Structure \texttt{regle}}
+\end{figure}
+
 
 \begin{figure}[h]
 \lstinputlisting[firstline=8,lastline=16, language=c]{regle.c}
