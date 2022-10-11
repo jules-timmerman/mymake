@@ -32,7 +32,6 @@ listeRegles* makefile2list(FILE* makefile){
 			pushed = 0; // Cette règle n'est pas encore dans liste
 			
 			char* copyLigne = malloc(strlen(ligne_buffer) + 1); // On crée une copie car strtok change la chaîne et on veut faire 2 parcours
-			char* memCopyLigne = copyLigne; // On garde en mémoire le début pour pouvoir free à la fin
 			strcpy(copyLigne, ligne_buffer);
 
 			token = strtok(copyLigne, ":"); // Nom de la règle (avant ":" dans la ligne)
@@ -50,10 +49,10 @@ listeRegles* makefile2list(FILE* makefile){
 
 			char** prerequis = malloc(sizeof(char*) * lenPrerequis); // On doit malloc pour que ce ne soit pas détruit au retour
 			
-			copyLigne = memCopyLigne; // On remet au début de la copie préparée
 			strcpy(copyLigne, ligne_buffer); // On refait une nouvelle copie pour ne pas changer ligne_buffer et pouvoir free à la fin
-			token = strtok(copyLigne, ":"); // On repart au premier prérequis
+			token = strtok(copyLigne, ":"); // On repart au premier prérequis (on passe le nom)
 			token = strtok(NULL, " ");
+
 
 			for (int i=0 ; i< lenPrerequis - 1; i++) { // On ne va pas au bout de la lecture cf en dessous
 				prerequis[i] = malloc(strlen(token) + 1); // Pour rajouter le nullbyte
@@ -72,7 +71,7 @@ listeRegles* makefile2list(FILE* makefile){
 
 			printf("Nombre prerequis : %d\n", lenPrerequis);
 
-			free(memCopyLigne); // On free
+			free(copyLigne); // On free
 		}
 		else { // C'est une ligne de commande !
 			ligne_buffer++; // Pour négliger la tabulation, on saute une case mémoire (surement optionnel)
