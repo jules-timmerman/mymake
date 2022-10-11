@@ -28,5 +28,6 @@ time_t getLatestModify(listeRegles_t* list); // Récupère la dernière modifica
 
 int childModified(listeRegles_t* list); // Vérifie si un élément a été modifié (cf hash)
 
+listeRegles_t* revListRegle(listeRegles_t* list); // Renverse la liste en paramètre
 
 #endif

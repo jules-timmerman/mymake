@@ -23,7 +23,7 @@ listeRegles_t* makefile2list(FILE* makefile){
 	while(tailleLigne>=0){
 		if (tailleLigne == 1){	// Ligne vide
 			if (!pushed){ // On complète et ajoute la règle si ce n'est déjà fait (il peut y avoir plusieurs \n)
-				nouvelleRegle->commandes = revList(nouvelleListeCommandes); // Renversée -> ordre de lecture
+				nouvelleRegle->commandes = revListCommande(nouvelleListeCommandes); // Renversée -> ordre de lecture
 				liste = addRegle(liste, nouvelleRegle);
 				pushed = true;
 			}
@@ -90,12 +90,14 @@ listeRegles_t* makefile2list(FILE* makefile){
 	}
 
 	if (!pushed){ // Il reste probablement une commande à ajouter à la liste
-		nouvelleRegle->commandes = revList(nouvelleListeCommandes);
+		nouvelleRegle->commandes = revListCommande(nouvelleListeCommandes);
 		liste = addRegle(liste, nouvelleRegle);
 	}
 	else {}
 
 	free(ligne_buffer); // Cf docu getline : on doit free
+
+	liste = revListRegle(liste); // On retourne notre liste de règle pour être dans le bon sens
 
 	return liste;
 }

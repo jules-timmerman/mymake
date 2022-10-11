@@ -22,7 +22,7 @@ listeCommandes_t* addCommande(listeCommandes_t* list, char* c);
 listeCommandes_t* auxRevList(listeCommandes_t* list1, listeCommandes_t* list2);
 
 // Renvoie un pointeur vers la liste renversée de [list]
-listeCommandes_t* revList(listeCommandes_t* list);
+listeCommandes_t* revListCommande(listeCommandes_t* list);
 
 // Execute chaque commande de la liste
 void execCommandes(listeCommandes_t* list);

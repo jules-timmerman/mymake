@@ -50,7 +50,7 @@ listeCommandes_t* revList(listeCommandes_t* list){
 }
 */
 
-listeCommandes_t* revList(listeCommandes_t* list){
+listeCommandes_t* revListCommande(listeCommandes_t* list){
 	if (list == NULL){
 		return NULL;
 	}

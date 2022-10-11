@@ -102,3 +102,21 @@ int childModified(listeRegles_t* list){
 	return childModified(list->next);
 }
 
+listeRegles_t* revListRegle(listeRegles_t* list){
+	if (list == NULL){
+		return NULL;
+	}
+	else{
+		listeRegles_t* nouvelleListe = malloc(sizeof(listeRegles_t));
+		nouvelleListe->next = NULL;
+		nouvelleListe->regle = list->regle;
+		listeRegles_t* acc = list->next;
+		while (acc != NULL){
+			nouvelleListe = addRegle(nouvelleListe, acc->regle); // On ajoute la suivante en tête
+			acc = acc->next; // On regarde la suite
+		}
+		freeListeRegle(list, 0); // On a crée une nouvelle liste donc on free l'ancienne mais pas le contenu
+		return nouvelleListe;
+	};
+}
+
