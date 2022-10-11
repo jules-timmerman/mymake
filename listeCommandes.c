@@ -6,15 +6,15 @@
 #include <stdbool.h>
 
 
-listeCommandes_t* createListeCommands(void){
+listeCommandes* createListeCommands(void){
 	return NULL;
 }
 
 
 // Booléen pour si on libère l'intérieur ou pas
-void freeListeCommands(listeCommandes_t* c, int freeContent){ 
+void freeListeCommands(listeCommandes* c, int freeContent){ 
 	if(c != NULL){
-		listeCommandes_t* next = c->next;
+		listeCommandes* next = c->next;
 		if(freeContent == 1){
 			free(c->commande); // Cf la création on doit copier
 		}
@@ -25,15 +25,15 @@ void freeListeCommands(listeCommandes_t* c, int freeContent){
 
 
 
-listeCommandes_t* addCommande(listeCommandes_t* list, char* c){
-	listeCommandes_t* retList = malloc(sizeof(listeCommandes_t));
+listeCommandes* addCommande(listeCommandes* list, char* c){
+	listeCommandes* retList = malloc(sizeof(listeCommandes));
 	retList->commande = c;
 	retList->next = list;
 	return retList;
 }
 
 /*
-listeCommandes_t* auxRevList(listeCommandes_t* list1, listeCommandes_t* list2){
+listeCommandes* auxRevList(listeCommandes* list1, listeCommandes* list2){
 		if (list1 == NULL){
 			return list2;
 		}
@@ -43,22 +43,22 @@ listeCommandes_t* auxRevList(listeCommandes_t* list1, listeCommandes_t* list2){
 	}
 
 
-listeCommandes_t* revList(listeCommandes_t* list){
-	listeCommandes_t* init = createListeCommands();
-	listeCommandes_t* renverse = list;
+listeCommandes* revList(listeCommandes* list){
+	listeCommandes* init = createListeCommands();
+	listeCommandes* renverse = list;
 	return renverse;
 }
 */
 
-listeCommandes_t* revListCommande(listeCommandes_t* list){
+listeCommandes* revListCommande(listeCommandes* list){
 	if (list == NULL){
 		return NULL;
 	}
 	else{
-		listeCommandes_t* nouvelleListe = malloc(sizeof(listeCommandes_t));
+		listeCommandes* nouvelleListe = malloc(sizeof(listeCommandes));
 		nouvelleListe->next = NULL;
 		nouvelleListe->commande = list->commande;
-		listeCommandes_t* acc = list->next;
+		listeCommandes* acc = list->next;
 		while (acc != NULL){
 			nouvelleListe = addCommande(nouvelleListe, acc->commande); // On ajoute la suivante en tête
 			acc = acc->next; // On regarde la suite
@@ -69,7 +69,7 @@ listeCommandes_t* revListCommande(listeCommandes_t* list){
 }
 
 
-void execCommandes(listeCommandes_t* list){
+void execCommandes(listeCommandes* list){
 	if(list == NULL){ // Bout de liste, cas d'arrêt
 		return;
 	}

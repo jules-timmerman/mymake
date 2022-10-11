@@ -9,19 +9,19 @@ struct regle{
 	char* nom;
 	char** prerequis;
 	int lenPrerequis;
-	listeCommandes_t* commandes;
+	listeCommandes* commandes;
 	time_t lastModified; // La dernière modification (en secondes)
 	int hashModified; // Booléen signifiant s'il y a eu une modification depuis la dernière fois (pour le hash)
 };
 
-typedef struct regle regle_t; // Creation de la regle
+typedef struct regle regle; // Creation de la regle
 
-regle_t* createRegle(char* nom, char** prerequis, int lenPrerequis, listeCommandes_t* commandes);
-void freeRegle(regle_t* r, int isPseudo); // Le booléen nous permet de savoir s'il s'agit d'une pseudo-règle ou pas
+regle* createRegle(char* nom, char** prerequis, int lenPrerequis, listeCommandes* commandes);
+void freeRegle(regle* r, int isPseudo); // Le booléen nous permet de savoir s'il s'agit d'une pseudo-règle ou pas
 
-regle_t* createRegleHash(char* nom, char** prerequis, int lenPrerequis, listeCommandes_t* commandes);
+regle* createRegleHash(char* nom, char** prerequis, int lenPrerequis, listeCommandes* commandes);
 
-void updateLastModified(regle_t* r);
+void updateLastModified(regle* r);
 time_t getLastModified(char* file); // Récupère la date de modification du fichier
 int estFichier(char* nom); // Vérifie si la règle réfère à un fichier
 

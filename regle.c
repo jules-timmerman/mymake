@@ -8,8 +8,8 @@
 #include <unistd.h>
 
 
-regle_t* createRegle(char* nom, char** prerequis, int lenPrerequis, listeCommandes_t* commandes){
-	regle_t* r = malloc(sizeof(regle_t));
+regle* createRegle(char* nom, char** prerequis, int lenPrerequis, listeCommandes* commandes){
+	regle* r = malloc(sizeof(regle));
 	r->nom = nom;
 	r->prerequis = prerequis;
 	r->lenPrerequis = lenPrerequis;
@@ -18,8 +18,8 @@ regle_t* createRegle(char* nom, char** prerequis, int lenPrerequis, listeCommand
 	return r;
 }
 
-regle_t* createRegleHash(char* nom, char** prerequis, int lenPrerequis, listeCommandes_t* commandes){
-	regle_t* r = malloc(sizeof(regle_t));
+regle* createRegleHash(char* nom, char** prerequis, int lenPrerequis, listeCommandes* commandes){
+	regle* r = malloc(sizeof(regle));
 	r->nom = nom;
 	r->prerequis = prerequis;
 	r->lenPrerequis = lenPrerequis;
@@ -28,7 +28,7 @@ regle_t* createRegleHash(char* nom, char** prerequis, int lenPrerequis, listeCom
 	return r;
 }
 
-void freeRegle(regle_t* r, int isPseudo){
+void freeRegle(regle* r, int isPseudo){
 	if(isPseudo == 0){
 		free(r->nom); // On libère le nom
 		
@@ -43,7 +43,7 @@ void freeRegle(regle_t* r, int isPseudo){
 	free(r);
 }
 
-void updateLastModified(regle_t* r){
+void updateLastModified(regle* r){
 	r->lastModified = getLastModified(r->nom);
 }
 

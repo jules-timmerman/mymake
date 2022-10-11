@@ -8,16 +8,16 @@
 #include "listeCommandes.h"
 
 
-listeRegles_t* makefile2list(FILE* makefile){
+listeRegles* makefile2list(FILE* makefile){
 	char *ligne_buffer = NULL; // Stockage de la ligne courante
 	size_t tailleLigne_buffer = 0;
 	ssize_t tailleLigne = 0; // Taille de la ligne courante, en comptant \n
 	
 	bool pushed = true; // true si la dernière règle a été incluse dans la liste de règles
 	char *token;
-	regle_t* nouvelleRegle = NULL;
-	listeRegles_t* liste = createListeRegle();
-	listeCommandes_t* nouvelleListeCommandes = createListeCommands();
+	regle* nouvelleRegle = NULL;
+	listeRegles* liste = createListeRegle();
+	listeCommandes* nouvelleListeCommandes = createListeCommands();
 	tailleLigne = getline(&ligne_buffer, &tailleLigne_buffer, makefile);
 
 	while(tailleLigne>=0){
@@ -105,12 +105,12 @@ listeRegles_t* makefile2list(FILE* makefile){
 
 // TODO : Optimisation sans iter ?
 // Q6 : version naive
-void make_naive(listeRegles_t* list, regle_t* regle){
+void make_naive(listeRegles* list, regle* regle){
 	if(estFichier(regle->nom) == 1){ // Cas de base
 		return; // Rien à faire
 	}
 	// Sinon : on construit récursivement
-	listeRegles_t* listPre = createListeRegleFromPre(list, regle);
+	listeRegles* listPre = createListeRegleFromPre(list, regle);
 	iterRegles(listPre, list, &make_naive, 1); // On applique make_naive à tout les éléments de listPre (avec argument list) (en ignorant NULL au cas où)
 	freeListeRegle(listPre, 0); // On a fini avec cette liste
 
@@ -121,13 +121,13 @@ void make_naive(listeRegles_t* list, regle_t* regle){
 
 // TODO : idem Q6
 // Q7 : la bonne version 
-void make(listeRegles_t* list, regle_t* regle){
+void make(listeRegles* list, regle* regle){
 	if(estFichier(regle->nom) == 1){ // Cas de base
 		return; // Rien à faire
 	}
 
 	// On récupère les listes des dépendances (en tant que règles et non de char*)
-	listeRegles_t* listPre = createListeRegleFromPre(list, regle);
+	listeRegles* listPre = createListeRegleFromPre(list, regle);
 	
 	// On construit récursivement les dépendances
 	// On applique make à tout les éléments de listPre (avec argument list) (en ignorant NULL au cas où)
@@ -150,13 +150,13 @@ void make(listeRegles_t* list, regle_t* regle){
 
 // Make with hash
 // Version utilisant le hash et non la date de modification
-void makeWHash(listeRegles_t* list, regle_t* regle){
+void makeWHash(listeRegles* list, regle* regle){
 	if(estFichier(regle->nom) == 1){ // Cas de base
 		return; // Rien à faire
 	}
 
 	// On récupère les listes des dépendances (en tant que règles et non de char*)
-	listeRegles_t* listPre = createListeRegleFromPre(list, regle);
+	listeRegles* listPre = createListeRegleFromPre(list, regle);
 	
 	// On construit récursivement les dépendances
 	// On applique makeWHash à tous les éléments de listPre (avec argument list) (en ignorant NULL au cas où)
@@ -180,7 +180,7 @@ int main(int argc, char** argv){
 			printf("Impossible d'ouvrir le fichier Makefile");
 			return 1;
 		}
-		listeRegles_t* list = makefile2list(makefile);
+		listeRegles* list = makefile2list(makefile);
 		char* cible;
 		if(argc <= 1){ // On a pas donné d'argument
 			cible = list->regle->nom;

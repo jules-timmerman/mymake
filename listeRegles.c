@@ -5,14 +5,14 @@
 
 
 // Cree une liste vide de regles (= le pointeur NULL)
-listeRegles_t* createListeRegle(void){
+listeRegles* createListeRegle(void){
 	return NULL;
 }
 
 // Libere une liste de regles (sans libérer les règles elles-mêmes)
-void freeListeRegle(listeRegles_t* list, int freeContent){ // Booléen si on libère le contenu avec ou pas
+void freeListeRegle(listeRegles* list, int freeContent){ // Booléen si on libère le contenu avec ou pas
 	if(list != NULL){
-		listeRegles_t* next = list->next;
+		listeRegles* next = list->next;
 		
 		if(estFichier(list->regle->nom) == 1){ // Il s'agit d'une pseudo-règle (cf createListeRegleFromPre)
 			freeRegle(list->regle, 1);
@@ -28,28 +28,28 @@ void freeListeRegle(listeRegles_t* list, int freeContent){ // Booléen si on lib
 }
 
 // Ajoute une regle [r] a la liste de regles [list]
-listeRegles_t* addRegle(listeRegles_t* list, regle_t* r){
-	listeRegles_t* retList = malloc(sizeof(listeRegles_t));
+listeRegles* addRegle(listeRegles* list, regle* r){
+	listeRegles* retList = malloc(sizeof(listeRegles));
 	retList->regle = r;
 	retList->next = list;
 	return retList;
 }
 
 // Cree la liste des règles prérequises pour une règle donnée (pour les .h/.c, on crée des pseudos-règles)
-listeRegles_t* createListeRegleFromPre(listeRegles_t* list, regle_t* regle){
-	listeRegles_t* retList = createListeRegle(); // Liste vide que l'on retournera
+listeRegles* createListeRegleFromPre(listeRegles* list, regle* r){
+	listeRegles* retList = createListeRegle(); // Liste vide que l'on retournera
 
-	for(int i = 0; i < regle->lenPrerequis; i++){
-		if(estFichier(regle->prerequis[i]) == 1){ // Les .h / .c n'ont pas de règles dans list : on crée une pseudo règle pour faciliter l'écriture du programme
+	for(int i = 0; i < r->lenPrerequis; i++){
+		if(estFichier(r->prerequis[i]) == 1){ // Les .h / .c n'ont pas de règles dans list : on crée une pseudo règle pour faciliter l'écriture du programme
 			// On freera la pseudo-règle en même temps que le retour de la fonction
 			// On passe par createRegle pour pouvoir bien initialiser le hash etc...
-			regle_t* r = createRegle(regle->prerequis[i], NULL, 0, NULL); 
+			regle* retR = createRegle(r->prerequis[i], NULL, 0, NULL); 
 
-			retList = addRegle(retList, r);
+			retList = addRegle(retList, retR);
 		}else{
-			regle_t* r = rechercheRegle(list, regle->prerequis[i]); // On cherche le ieme prerequis dans la liste
+			regle* retR = rechercheRegle(list, r->prerequis[i]); // On cherche le ieme prerequis dans la liste
 			if(r != NULL){ // Si on a trouvé une règle correspondant au ieme prérequis
-				retList = addRegle(retList, r); // On l'ajoute à notre liste de retour
+				retList = addRegle(retList, retR); // On l'ajoute à notre liste de retour
 			}
 		}
 	}
@@ -58,7 +58,7 @@ listeRegles_t* createListeRegleFromPre(listeRegles_t* list, regle_t* regle){
 
 
 // Renvoie un pointeur vers la regle nommée [nom], et NULL si une telle regle n'existe pas
-regle_t* rechercheRegle(listeRegles_t* list, char* nom){
+regle* rechercheRegle(listeRegles* list, char* nom){
 	if (list == NULL){
 		return NULL;
 	}
@@ -72,7 +72,7 @@ regle_t* rechercheRegle(listeRegles_t* list, char* nom){
 
 // Itère sur la fonction
 // si ignoreNULL = 1, on applique ignore les regles NULL
-void iterRegles(listeRegles_t* regles, listeRegles_t* arg1, void (*func)(listeRegles_t*, regle_t*), int ignoreNULL){
+void iterRegles(listeRegles* regles, listeRegles* arg1, void (*func)(listeRegles*, regle*), int ignoreNULL){
 	if(regles == NULL){ // Cas d'arrêt : on est sur la liste vide
 		return;
 	}
@@ -82,7 +82,7 @@ void iterRegles(listeRegles_t* regles, listeRegles_t* arg1, void (*func)(listeRe
 	iterRegles(regles->next, arg1, func, ignoreNULL);
 }
 
-time_t getLatestModify(listeRegles_t* list){
+time_t getLatestModify(listeRegles* list){
 	if(list == NULL){ // Cas de base : liste vide
 		return 0;
 	}
@@ -92,7 +92,7 @@ time_t getLatestModify(listeRegles_t* list){
 }
 
 
-int childModified(listeRegles_t* list){
+int childModified(listeRegles* list){
 	if(list == NULL){ // Cas de base : on est arrivé au bout
 		return 0;
 	}
@@ -102,15 +102,15 @@ int childModified(listeRegles_t* list){
 	return childModified(list->next);
 }
 
-listeRegles_t* revListRegle(listeRegles_t* list){
+listeRegles* revListRegle(listeRegles* list){
 	if (list == NULL){
 		return NULL;
 	}
 	else{
-		listeRegles_t* nouvelleListe = malloc(sizeof(listeRegles_t));
+		listeRegles* nouvelleListe = malloc(sizeof(listeRegles));
 		nouvelleListe->next = NULL;
 		nouvelleListe->regle = list->regle;
-		listeRegles_t* acc = list->next;
+		listeRegles* acc = list->next;
 		while (acc != NULL){
 			nouvelleListe = addRegle(nouvelleListe, acc->regle); // On ajoute la suivante en tête
 			acc = acc->next; // On regarde la suite
