@@ -104,7 +104,7 @@ listeRegles* makefile2list(FILE* makefile){
 
 // TODO : Optimisation sans iter ?
 // Q6 : version naive
-void make_naive(listeRegles_t* list, regle_t* regle){
+void make_naive(listeRegles* list, regle* regle){
 	if(isFile(regle->nom) == 1){ // Cas de base
 		return; // Rien à faire
 	}
@@ -120,7 +120,7 @@ void make_naive(listeRegles_t* list, regle_t* regle){
 
 // TODO : idem Q6
 // Q7 : la bonne version 
-void make(listeRegles_t* list, regle_t* regle){
+void make(listeRegles* list, regle* regle){
 	if(isFile(regle->nom) == 1){ // Cas de base
 		return; // Rien à faire
 	}
@@ -149,7 +149,7 @@ void make(listeRegles_t* list, regle_t* regle){
 
 // Make with hash
 // Version utilisant le hash et non la date de modification
-void makeWHash(listeRegles_t* list, regle_t* regle){
+void makeWHash(listeRegles* list, regle* regle){
 	if(isFile(regle->nom) == 1){ // Cas de base
 		return; // Rien à faire
 	}

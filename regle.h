@@ -9,7 +9,7 @@ struct regle{
 	char* nom; // Nom de la règle
 	char** prerequis; // Tableau des prérequis
 	int lenPrerequis; // Taille du tableau
-	listeCommandes_t* commandes; // Liste des commandes à faire
+	listeCommandes* commandes; // Liste des commandes à faire
 	time_t lastModified; // Heure de dernière modification (en secondes)
 	int hashModified; // Booléen : 1 si le fichier [nom] modifié depuis la dernière compilation (pour le hash)
 };
