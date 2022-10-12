@@ -2,7 +2,8 @@
 #include "d.h"
 
 int main() {
-    c(); // test
+    c(); // test2
     d();
+	c();
     return 0;
 }

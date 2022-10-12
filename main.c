@@ -164,6 +164,8 @@ void makeWHash(listeRegles* list, regle* regle){
 	if(childModified(listPre) == 1){ // On a modifié une dépendance plus récemment : on recompile
 		// On compile notre règle
 		execCommandes(regle->commandes);
+		// On reupdate le hash pour les parents
+		regle->hashModified = hashWasModified(regle->nom); // On repasse par cette fonction pour modifier le .hash
 	}
 
 	
@@ -186,7 +188,7 @@ int main(int argc, char** argv){
 		else {
 			cible = argv[1];
 		}
-		make(list, rechercheRegle(list, cible));
+		makeWHash(list, rechercheRegle(list, cible));
 		
 		freeListeRegle(list, 1);
 		fclose(makefile);
