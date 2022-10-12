@@ -29,6 +29,6 @@ int hashWasModified(char* nom); // Vérifie s'il y a eu une modification du hash
 void updateHash(char* prettyHash, FILE* f); // Modifie le nouveau hash
 void addHash(char* nom, char* prettyHash, FILE* f); // Ajoute un nouveau hash au fichier .hash
 
-void hashFile(char* nom, unsigned char* hash);
+int hashFile(char* nom, unsigned char* hash);
 
 #endif

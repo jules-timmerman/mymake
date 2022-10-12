@@ -1,5 +1,6 @@
 main: main.o a.o b.o c.o d.o
 	gcc -o main main.o a.o b.o c.o d.o
+	echo "Salut"
 
 main.o: main.c c.h d.h
 	gcc -c main.c

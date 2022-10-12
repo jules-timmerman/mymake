@@ -1,5 +1,6 @@
 main: main.o regle.o listeRegles.o sha256.o listeCommandes.o
-	gcc -g -o mymake main.o regle.o listeRegles.o sha256.o listeCommandes.o && cp mymake testproj/
+	gcc -g -o main main.o regle.o listeRegles.o sha256.o listeCommandes.o
+	cp main mymake
 
 main.o: main.c regle.h listeRegles.h
 	gcc -c -g main.c

@@ -161,7 +161,7 @@ void makeWHash(listeRegles* list, regle* regle){
 	iterRegles(listPre, list, &makeWHash, 1); 
 
 
-	if(childModified(listPre) == 1){ // On a modifié une dépendance plus récemment : on recompile
+	if(childModified(listPre) == 1 || regle->hashModified == 1){ // On a modifié une dépendance plus récemment OU le fichier lui-même a été "modifié" (dans le cas autre qu'un fichier, il avait sûrement été supprimé): on recompile
 		// On compile notre règle
 		execCommandes(regle->commandes);
 		// On reupdate le hash pour les parents

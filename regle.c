@@ -86,8 +86,11 @@ int hashWasModified(char* nom){
 	}
 
 	unsigned char currentHash[SHA256_BLOCK_SIZE];
-	hashFile(nom, currentHash); // Calcule le hash actuel
-
+	int error = hashFile(nom, currentHash); // Calcule le hash actuel
+	if(error != 0){ // Problème à l'ouverture : on recompile (on a peut-être pas trouvé)
+		fclose(f);
+		return 1;
+	}
 	char prettyHash[2*SHA256_BLOCK_SIZE + 1]; // x2 car chaque byte va prendre 2 places
 	prettyHash[2*SHA256_BLOCK_SIZE] = '\0'; // On rajoute le \0 pour pouvoir manipuler avec strcmp. x2 car un byte est écrit sur 2 caractères hexadécimal (00 -> FF)
 	for(int i = 0; i < SHA256_BLOCK_SIZE; i++){
@@ -116,7 +119,7 @@ int hashWasModified(char* nom){
 
 	fclose(f);
 
-	return 1; // On a jamais trouvé => nouveau fichier (ou dans le doute on recompil)
+	return 1; // On a jamais trouvé => nouveau fichier (ou dans le doute on recompile)
 }
 
 // On modifie le fichier .hash avec la nouvelle valeur de hash
@@ -135,16 +138,19 @@ void addHash(char* nom, char* prettyHash, FILE* f){
 	fputs("\n", f); // On rajoute un retour à la ligne
 }
 
-
-void hashFile(char* nom, unsigned char* hash){
-	SHA256_CTX* ctx = malloc(sizeof(SHA256_CTX));
-	sha256_init(ctx); // On initialise notre hash
+// Renvoie int pour s'il y a eu une erreur
+// 0: pas de problème
+// 1: pb
+int hashFile(char* nom, unsigned char* hash){
 
 	FILE* f = fopen(nom, "rb"); // On lit en mode binaire ici
 	if(f == NULL){
 		printf("Couldn't open file %s for hash\n", nom);
-		exit(1);
+		return 1;
 	}
+
+	SHA256_CTX* ctx = malloc(sizeof(SHA256_CTX));
+	sha256_init(ctx); // On initialise notre hash
 	
 	// On lit le fichier au fur et à mesure par blocs
 	unsigned char* data = malloc(sizeof(char) * BLOCK_SIZE);
@@ -159,4 +165,6 @@ void hashFile(char* nom, unsigned char* hash){
 
 	free(data);
 	free(ctx);
+
+	return 0;
 }
