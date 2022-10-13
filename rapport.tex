@@ -327,6 +327,13 @@ Pour la fonction \texttt{make\_naive}, nous avons adopté une approche récursiv
 	On crée donc de telles règles lors de l'exécution de \texttt{createListRegleFromPre}, et on prévoit de libérer la mémoire utilisée en même temps que celle prise par la liste retournée.
 
 	Une fois que l'on a construit la liste des prérequis, on effectue les appels récursifs à l'aide de la fonction \texttt{iterRegles} qui va appliquer la fonction \texttt{make\_naive} avec comme premier argument la liste générale de règles du \textbf{Makefile} à chaque prérequis.
+	La fonction \texttt{iterRegles} est une fonction plus générale qui applique une certaine fonction à tous les éléments de la liste un à un.
+	Elle prends en argument la liste sur laquelle on souhaite appliquer la fonction, la liste générale de règles qui sera passée en argument de la fonction, un pointeur vers la fonction à appliquer et un booléen permettant de décider comment gérer les potentielles règles \texttt{NULL}.
+	La déclaration d'un pointeur vers une fonction est la suivante \cite{functionPointers} : 
+	\begin{center}
+		\texttt{type\_de\_retour  (*nom)(arg1, arg2,...)}. 
+	\end{center}
+	On peut alors passer une fonction en argument d'une autre fonction pour pouvoir l'appliquer et ainsi créer une fonction plus flexible. 
 
 	Après ces appels, on a donc construit récursivement les prérequis, et l'on peut ensuite construire la règle elle-même.
 	
@@ -359,11 +366,12 @@ On libère ensuite la mémoire utilisée par nos ressources, en l'occurence les 
 \begin{question} %% Question 10 = extensions
 	Nous avons décidé d'implémenter la méthode utilisant une fonction de hash pour vérifier s'il y a eu un changement depuis la dernière compilation.
 
-	Après une première tentative peu fructueuse à l'aide d'une fonction de hashage plus simple, nous avons utilisé % Biblio
-	une implémentation en SHA-256 en C. La librairie est principalement composée de trois fonctions et une structure.
+	Après une première tentative peu fructueuse à l'aide d'une fonction de hashage plus simple, nous avons utilisé
+	une implémentation en SHA-256 en C\cite{hash}. La librairie est principalement composée de trois fonctions et une structure.
 	\begin{itemize}
 		\item On initialise tout d'abord une structure qui sera utilisée par les algorithmes pour stocker les informations nécessaires au calcul du hash.
 		\item On lit le fichier \textbf{.hash} qui contient les hash calculés lors de la dernière exécution. On le lit par bloc de 64 bytes et l'on utilise la fonction \texttt{sha256\_update} pour hasher au fur et à mesure.
+		Nous avons choisi des blocs de 64 bytes à cause de l'implémentation de la fonction \texttt{sha256\_update} qui met à jour tout les 64 bytes la structure mais on pourrait utiliser cette fonction sans une lecture formatée ainsi.
 		\item Une fois que l'on a fini la lecture, on utilise \texttt{sha256\_final} pour calculer le hash de retour.
 	\end{itemize}
 
@@ -385,10 +393,15 @@ On libère ensuite la mémoire utilisée par nos ressources, en l'occurence les 
   \textit{C library function-strtok()},
   \texttt{\\tutorialspoint.com/c\_standard\_library/c\_function\_strtok.htm},
   08/10/22.
+
+  \bibitem{functionPointers}
+  \textit{How to declare a pointer to a function?}
+  \texttt{\\geeksforgeeks.org/how-to-declare-a-pointer-to-a-function/}, 
+  08/10/22
   
   \bibitem{hash}
-  \textit{Hash Functions},
-  \texttt{cse.yorku.ca/$\sim$oz/hash.html},
+  \textit{Crypto-algorithms},
+  \texttt{github.com/B-Con/crypto-algorithms},
   08/10/22.
 
 
