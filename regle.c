@@ -109,6 +109,7 @@ int hashWasModified(char* nom){
 			if(b != 0){ // Le hash a été changé : on le met à jour dans .hash pour la prochinae compilation
 				updateHash(prettyHash, f);
 			}
+			free(line); // On free le getline
 			fclose(f); // On ferme les ressources
 			return b != 0; // On renvoie la comparaison (b == 1 = 1 ssi b == 1 ssi changement) 
 		}
@@ -117,6 +118,7 @@ int hashWasModified(char* nom){
 	// On arrive ici : on n'a jamais trouvé dans le ficher : on ajoute à la fin 
 	addHash(nom, prettyHash, f);
 
+	free(line);
 	fclose(f);
 
 	return 1; // On a jamais trouvé => nouveau fichier (ou dans le doute on recompile)
@@ -165,6 +167,8 @@ int hashFile(char* nom, unsigned char* hash){
 
 	free(data);
 	free(ctx);
+
+	fclose(f);
 
 	return 0;
 }

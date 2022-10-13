@@ -31,14 +31,14 @@ listeRegles* makefile2list(FILE* makefile){
 		else if (*ligne_buffer != 9) { // pas de tabulation -> nouvelle règle !
 			pushed = 0; // Cette règle n'est pas encore dans liste
 			
-			char* copyLigne = malloc(strlen(ligne_buffer) + 1); // On crée une copie car strtok change la chaîne et on veut faire 2 parcours
-			strcpy(copyLigne, ligne_buffer);
+			char* copyLigne = malloc(sizeof(char) * (strlen(ligne_buffer) + 1)); // On crée une copie car strtok change la chaîne et on veut faire 2 parcours
+			strcpy(copyLigne, ligne_buffer); // +1 pour le \0 à la fin
 
 			token = strtok(copyLigne, ":"); // Nom de la règle (avant ":" dans la ligne)
-			char* nom = malloc(sizeof(strlen(token)) + 1); // On malloc pour le nom (pour garder après l'exec), +1 pour nullbyte
+			char* nom = malloc(sizeof(char) * (strlen(token) + 1)); // On malloc pour le nom (pour garder après l'exec), +1 pour nullbyte
 			strcpy(nom, token);
 
-			printf("Nom nouvelleRegle : %s\n", token);
+			// printf("Nom nouvelleRegle : %s\n", token);
 			int lenPrerequis = 0;
 			token = strtok(NULL, " "); 
 			// Comptage du nombre de prérequis
@@ -55,29 +55,29 @@ listeRegles* makefile2list(FILE* makefile){
 
 
 			for (int i=0 ; i< lenPrerequis - 1; i++) { // On ne va pas au bout de la lecture cf en dessous
-				prerequis[i] = malloc(strlen(token) + 1); // Pour rajouter le nullbyte
+				prerequis[i] = malloc(sizeof(char) * (strlen(token) + 1)); // Pour rajouter le nullbyte
 				strcpy(prerequis[i], token); // On copie
 				token = strtok(NULL, " "); // Suivant !
 			};
 			// On traite le dernier à part à cause de la lecture d'un \n final que l'on enlève ici
 			size_t len = strlen(token);
 			token[len-1] = '\0'; // On change le \n en un \0 (donc on l'enlève)
-			prerequis[lenPrerequis - 1] = malloc(len); // Au final la taille devient 1 de main
+			prerequis[lenPrerequis - 1] = malloc(sizeof(char) * len); // Au final la taille devient 1 de main
 			strcpy(prerequis[lenPrerequis - 1], token);
 			token = strtok(NULL, " "); 
 
 			nouvelleListeCommandes = createListeCommands(); // On crée notre liste vide de commandes 
 			nouvelleRegle = createRegle(nom, prerequis, lenPrerequis, nouvelleListeCommandes); // On crée la règle. On remplira la liste de commandes au fur et à mesure
 
-			printf("Nombre prerequis : %d\n", lenPrerequis);
+			// printf("Nombre prerequis : %d\n", lenPrerequis);
 
 			free(copyLigne); // On free
 		}
 		else { // C'est une ligne de commande !
 			ligne_buffer++; // Pour négliger la tabulation, on saute une case mémoire (surement optionnel)
-			printf("Commande : %s\n", ligne_buffer);
+			// printf("Commande : %s\n", ligne_buffer);
 
-			char* commande = malloc(strlen(ligne_buffer) + 1); // On fait la copie pour les mêmes raisons qu'avant (pas mourir à la fin)
+			char* commande = malloc(sizeof(char) * (strlen(ligne_buffer) + 1)); // On fait la copie pour les mêmes raisons qu'avant (pas mourir à la fin)
 			strcpy(commande, ligne_buffer);
 
 			nouvelleListeCommandes = addCommande(nouvelleListeCommandes, commande);
