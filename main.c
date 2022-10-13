@@ -12,7 +12,7 @@ listeRegles* makefile2list(FILE* makefile){
 	size_t tailleLigne_buffer = 0;
 	ssize_t tailleLigne = 0; // Taille de la ligne courante, en comptant \n
 	
-	int pushed = 1; // bool : 1 si dernière règle a été incluse dans liste de règles
+	int pushed = 1; // bool : vrai si dernière règle a été incluse dans liste de règles
 	char *token;
 	regle* nouvelleRegle = NULL;
 	listeRegles* liste = createListeRegle();
@@ -38,7 +38,7 @@ listeRegles* makefile2list(FILE* makefile){
 			char* nom = malloc(sizeof(strlen(token)) + 1); // On malloc pour le nom (pour garder après l'exec), +1 pour nullbyte
 			strcpy(nom, token);
 
-			printf("Nom nouvelleRegle : %s\n", token);
+			//printf("Nom nouvelleRegle : %s\n", token);
 			int lenPrerequis = 0;
 			token = strtok(NULL, " "); 
 			// Comptage du nombre de prérequis
@@ -69,13 +69,13 @@ listeRegles* makefile2list(FILE* makefile){
 			nouvelleListeCommandes = createListeCommands(); // On crée notre liste vide de commandes 
 			nouvelleRegle = createRegle(nom, prerequis, lenPrerequis, nouvelleListeCommandes); // On crée la règle. On remplira la liste de commandes au fur et à mesure
 
-			printf("Nombre prerequis : %d\n", lenPrerequis);
+			//printf("Nombre prerequis : %d\n", lenPrerequis);
 
 			free(copyLigne); // On free
 		}
 		else { // C'est une ligne de commande !
-			ligne_buffer++; // Pour négliger la tabulation, on saute une case mémoire (surement optionnel)
-			printf("Commande : %s\n", ligne_buffer);
+			ligne_buffer++; // Pour négliger la tabulation, on saute une case mémoire (sûrement optionnel)
+			//printf("Commande : %s\n", ligne_buffer);
 
 			char* commande = malloc(strlen(ligne_buffer) + 1); // On fait la copie pour les mêmes raisons qu'avant (pas mourir à la fin)
 			strcpy(commande, ligne_buffer);
@@ -87,7 +87,7 @@ listeRegles* makefile2list(FILE* makefile){
 		tailleLigne = getline(&ligne_buffer, &tailleLigne_buffer, makefile); // Lecture nouvelle ligne
 	}
 
-	if (!pushed){ // Il reste probablement une commande à ajouter à la liste
+	if (!pushed){ // Il reste peut-être une commande à ajouter à la liste
 		nouvelleRegle->commandes = revListCommande(nouvelleListeCommandes);
 		liste = addRegle(liste, nouvelleRegle);
 	}
@@ -99,6 +99,12 @@ listeRegles* makefile2list(FILE* makefile){
 
 	return liste;
 }
+
+
+
+
+
+
 
 
 // TODO : Optimisation sans iter ?

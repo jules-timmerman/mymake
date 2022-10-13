@@ -73,7 +73,7 @@ void execCommandes(listeCommandes* list){
 	if(list == NULL){ // Bout de liste, cas d'arrêt
 		return;
 	}
-	printf("%s\n", list->commande);
+	printf("%s", list->commande);
 	system(list->commande);
 	execCommandes(list->next);
 }

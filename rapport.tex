@@ -103,13 +103,6 @@ arc=0mm
 }
 
 
-\newcommand{\Codesource}[2]{
-\begin{figure}[h]
-\lstinputlisting[language=c]{ #2 }
-\caption{Code source de \texttt{#1}}
-\label{code:#1}
-\end{figure}
-}
 
 
 
@@ -162,10 +155,16 @@ Pour le reste, on construit alors un graphe de dépendance (voir figure \ref{fig
 \label{fig:dependance_test}
 \end{figure}
 
-Nous pouvons alors en déduire le fichier \textbf{Makefile} (figure \ref{code:Makefile}).
+Nous pouvons alors en déduire le fichier \textbf{Makefile} (figure \ref{code:makefile_test}).
 
 
-\Codesource{Makefile}{testproj/Makefile}
+
+\begin{figure}[h]
+\lstinputlisting[language=c]{ testproj/Makefile }
+\caption{Code source de \textbf{Makefile} du projet de test}
+\label{code:makefile_test}
+\end{figure}
+
 
 \end{question}
 
@@ -175,51 +174,70 @@ Nous pouvons alors en déduire le fichier \textbf{Makefile} (figure \ref{code:Ma
 
 \begin{question} %% Question 2
 
-Nous créons des fichiers \textbf{regles.c} et \textbf{regles.h}, où l'on définit une structure \texttt{regle} par
-
-\begin{figure}[h]
-\lstinputlisting[firstline=8,lastline=17, language=c]{regle.h}
-\caption{Structure \texttt{regle}}
-\end{figure}
-
-Cette structure est munie des fonctions suivantes :
-
-\begin{figure}[h]
-\lstinputlisting[firstline=19,lastline=29, language=c]{regle.h}
-\caption{Structure \texttt{regle}}
-\end{figure}
+Nous créons un module \textbf{regles.c}, où l'on définit une structure \texttt{regle}. Une \texttt{regle} contient un pointeur vers une chaîne \texttt{nom}, un pointeur vers un tableau \texttt{prerequis} qui représente l'ensemble des fichiers nécessaires pour compiler [\texttt{nom}]. Il y a aussi \texttt{lenPrerequis} la taille de ce tableau que nous stockons pour plus de simplicité dans le code. La liste des commandes à effectuer est stockée dans la liste (nous définissons les listes chaînées dans le module \textbf{listeRegles}) des \texttt{commandes}. Enfin, nous avons choisi d'implémenter l'extension qui remplace la date de dernière modification du fichier par un hash. Les attributs \texttt{lastModified} (temps) et \texttt{hashModified} (booléen) sont donc utilisés, et leur fonctionnement est détaillé en question 10.
 
 
-\begin{figure}[h]
-\lstinputlisting[firstline=8,lastline=16, language=c]{regle.c}
-\caption{Code source de }
-\end{figure}
-
-\Codesource{regle.h}{regle.h}
-\Codesource{regle.c}{regle.c}
-
-\Codesource{listeRegles.h}{listeRegles.h}
-\Codesource{listeRegles.c}{listeRegles.c}
+Cette structure est munie des fonctions permettant la création de règle (\texttt{createRegle}) et la suppression (\texttt{freeRegle}). Les autres fonctions permettent la gestion des dernières modifications et des hashs, et sont détaillées en question 10.
 
 \end{question}
 
 \begin{question} %% Question 3
 
-On obtient le fichier suivant 
-\Codesource{Makefile}{Makefile}
+Nous définissons un module \textbf{listeRegles.c} qui permet de gérer les ensembles de règles. Comme le code nécessite de parcourir l'ensemble , nous décidons d'implémenter ces ensembles à l'aide de listes simplement chaînées.
+La structure \texttt{listeRegles} est donc le pointeur \texttt{NULL}, ou un couple (pointeur vers une \texttt{regle}, pointeur vers une \texttt{listeRegles}).
+
+Les fonctions \texttt{createListeRegle} et \texttt{freeListeRegle} permettent la création et la suppression d'une \texttt{listeRegles}.
+
+La fonction \texttt{addRegle} permet d'ajouter une \texttt{regle} à une \texttt{listeRegles}, via un ajout à la tête.
+
+La fonction \texttt{rechercheRegle} recherche une \texttt{regle} par son nom dans une \texttt{listeRegles}, et la renvoie si elle existe.
+
+La fonction \texttt{iterRegles} permet d'appliquer une fonction à tous les éléments d'une \texttt{listeRegles}. 
+
+La fonction \texttt{revListRegle} renvoie la liste renversée de celle donnée en argument.
+
+Enfin, les fonctions \texttt{getLatestModify} et \texttt{childModified} seront détaillées en question 10.
+
+
 
 \end{question}
 
 \begin{question} %% Question 4
 
+Le fichier \textbf{Makefile} du projet est le suivant :
+
+\begin{figure}[h]
+\lstinputlisting{Makefile}
+\caption{Code source de \textbf{Makefile} de \texttt{myMake}}
+\end{figure}
 \end{question}
 
 \begin{question} %% Question 5
 
+Dans le fichier \texttt{main.c}, nous définissons une fonction \texttt{makefile2list}, qui prend en argument un pointeur vers un fichier \textbf{makefile} valide, et renvoie un pointeur vers une liste de règles représentant les règles définies dans le fichier.
+
+Son fonctionnement est le suivant :
+
+\begin{enumerate}
+\item une liste vide de règles est créée
+\item la ligne courante du fichier est lue, elle est du type \texttt{nom : <listePrerequis>}. Une nouvelle règle vide est crée, où la fonction ajoute toutes les lignes suivantes non-vides, c'est-à-dire des lignes de type \texttt{<commande>}
+\item la première ligne vide rencontrée (constituée du seul caractère $\mathtt{\backslash n}$) lue, ou la fin du fichier, déclenche l'ajout de la règle courante dans la liste.
+\item Retour à l'étape 2
+\end{enumerate}
+
+
+La lecture s'effectue grâce à la fonction \texttt{getline}. Ainsi, la commande \begin{center}
+\texttt{tailleLigne = getline(\&ligne\_buffer, \&tailleLigne\_buffer, makefile)}
+\end{center}
+écrit la ligne courante du fichier \texttt{makefile} dans la chaîne \texttt{ligne\_buffer}, stocke sa longueur dans \texttt{taille\_ligne} (en comptant le retour à la ligne). La variable \texttt{tailleLigne\_buffer} ne sera pas utilisée ici.
+
+
+
+
 \end{question}
 
 \begin{question} %% Question 6
-Pour la fonction \texttt{make\_naive}, nous avons adopté une approche récursive.
+
 \end{question}
 
 \begin{question} %% Question 7
