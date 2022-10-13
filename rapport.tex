@@ -146,9 +146,9 @@ arc=0mm
 \maketitle
 
 \begin{abstract}
-Lorsque l'on travaille sur un projet suffisamment complexe, il est pratique de séparer son code en plusieurs fichiers. Le compilateur doit alors compiler chaque fichier séparément, et regrouper différents fichiers binaires en un unique exécutable lors de la phase d'édition des liens. Lors d'une compilations, il est alors légitime de ne recompiler que les fichiers qui ont été modifiés depuis la compilation précédente. Une solution standard est de décrire les dépendance entre tous les fichiers source dans un fichier \textbf{makefile}, et d'utiliser un programme, \texttt{make}, qui se charge de lancer les compilations strictement nécessaires.
+Lorsque l'on travaille sur un projet suffisamment complexe, il est pratique de séparer son code en plusieurs fichiers. Le compilateur doit alors compiler chaque fichier séparément, et regrouper les différents fichiers binaires en un unique exécutable lors de la phase d'édition des liens. Lors d'une compilation, il est ainsi légitime de ne recompiler que les fichiers qui ont été modifiés depuis la compilation précédente. Une solution standard est de décrire les dépendances entre tous les fichiers source dans un fichier nommé \textbf{makefile}, et d'utiliser un programme, \texttt{make}, qui se charge de lancer les compilations strictement nécessaires.
 
-L'objectif est de ce projet est de faire une implémentation en C d'une version minimaliste de \texttt{make}. Nous implémenterons d'abord une fonction permettant la lecture du fichier de règles. Ensuite nous construirons notre programme selon les spécifications imposées.
+L'objectif de ce projet est de faire une implémentation en C d'une version minimaliste de \texttt{make}. Nous implémenterons d'abord une fonction permettant la lecture du fichier \textbf{makefile}. Ensuite, nous construirons notre programme selon les spécifications imposées.
 
 \end{abstract}
 
@@ -157,19 +157,18 @@ L'objectif est de ce projet est de faire une implémentation en C d'une version 
 \begin{question} %% Question 1
 
 Pour créer le fichier \textbf{Makefile}, il faut comprendre la dépendance entre les fichiers du projet.
-Nous voulons compiler un fichier exécutable \textbf{main} à partir du fichier \textbf{main.c}.
 
-Tout d'abord, rappelons qu'au minimum, le fichier \textbf{main.c} est transformé par le préprocesseur en un fichier \textbf{main.i}, compilé en un fichier assembleur \textbf{main.s}, puis en un fichier binaire \textbf{main.o}. Enfin, l'étape d'édition des liens utilise \textbf{main.o} ainsi que tous les fichiers binaires (en \textbf{.o}) des bibliothèques et des fichiers annexes déclarés dans le \textit{header} de \textbf{main.c} (fichiers en \textbf{.h}) utilisés pour produire un fichier final exécutable \textbf{main}.
+Nous voulons compiler un fichier exécutable \textbf{main} à partir du fichier \textbf{main.c}. Tout d'abord, rappelons qu'au minimum, le fichier \textbf{main.c} est transformé par le préprocesseur en un fichier \textbf{main.i}, compilé en un fichier assembleur \textbf{main.s}, puis en un fichier binaire \textbf{main.o}. Enfin, l'étape d'édition des liens utilise \textbf{main.o} ainsi que tous les fichiers binaires (en \textbf{.o}) des bibliothèques et des fichiers annexes déclarés dans le \textit{header} de \textbf{main.c} (fichiers en \textbf{.h}) pour produire un fichier final exécutable \textbf{main}.
 
 
-Pour produire \textbf{main}, le compilateur a donc besoin du fichier \textbf{main.o}. Dans notre cas, les fichiers \textbf{c.h} et \textbf{d.h} sont déclarés en \textit{header}, ce qui implique que les fichiers \textbf{c.o} et \textbf{d.o} sont aussi demandés. De plus, les fichiers \textbf{a.h} et \textbf{b.h} sont demandés par \textbf{c.h}, et \textbf{a.h} est demandé par \textbf{d.h}. Pour compiler le fichier \textbf{main.c}, il faut donc avoir accès aux fichiers \textbf{main.o}, \textbf{a.o}, \textbf{b.o}, \textbf{c.o} et \textbf{d.o}.
-On ajoute donc les lignes suivantes au fichier \textbf{Makefile} :
+Pour produire \textbf{main}, le compilateur a donc besoin du fichier \textbf{main.o}. Dans notre cas, les fichiers \textbf{c.h} et \textbf{d.h} sont déclarés en \textit{header}, ce qui implique que les fichiers \textbf{c.o} et \textbf{d.o} sont aussi demandés. De plus, les fichiers \textbf{a.h} et \textbf{b.h} sont demandés par \textbf{c.h}, et \textbf{a.h} est demandé par \textbf{d.h}. Pour compiler le fichier \textbf{main.c}, il faut alors avoir accès aux fichiers \textbf{main.o}, \textbf{a.o}, \textbf{b.o}, \textbf{c.o} et \textbf{d.o}.
+On ajoute ainsi les lignes suivantes au fichier \textbf{Makefile} :
 \begin{verbatim}
 main: main.o a.o b.o c.o d.o
     gcc -o main main.o a.o b.o c.o d.o
 \end{verbatim}
 
-Pour le reste, on construit alors un graphe de dépendance (voir figure \ref{fig:dependance_test}), où $\mathbf{x}\rightarrow \mathbf{y}$ signifie que le fichier \textbf{y} a besoin du fichier \textbf{x} pour être compilé.
+Pour le reste, nous construisons un graphe de dépendance (voir figure \ref{fig:dependance_test}), où $\mathbf{x}\rightarrow \mathbf{y}$ signifie que le fichier \textbf{y} a besoin du fichier \textbf{x} pour être compilé.
 
 
 \begin{figure}[!h]
@@ -203,24 +202,22 @@ Nous pouvons alors en déduire le fichier \textbf{Makefile} (figure \ref{code:ma
 \end{question}
 
 
-\newpage
-
-
 \begin{question} %% Question 2
 
-Nous créons un module \textbf{regles}, où l'on définit une structure \texttt{regle}. Une \texttt{regle} contient un pointeur vers une chaîne \texttt{nom}, un pointeur vers un tableau \texttt{prerequis} qui représente l'ensemble des fichiers nécessaires pour compiler [\texttt{nom}]. L'entier \texttt{lenPrerequis} représente la taille de ce tableau. La liste des commandes à effectuer est stockée dans la liste (nous définissons les listes chaînées dans le module \textbf{listeRegles}) des \texttt{commandes}.
+Nous créons un module \textbf{regles}, où nous définissons une structure \texttt{regle}. Une \texttt{regle} contient un pointeur vers une chaîne \texttt{nom}, un pointeur vers un tableau \texttt{prerequis} qui représente l'ensemble des fichiers nécessaires pour compiler [\texttt{nom}]. L'entier \texttt{lenPrerequis} représente la taille de ce tableau. La liste des commandes à effectuer est stockée dans la liste (nous définissons les listes chaînées dans le module \textbf{listeRegles}) des \texttt{commandes}.
 
-Enfin, comme nous avons choisi d'implémenter l'extension qui remplace la date de dernière modification du fichier par un hash, on ajoute les attributs \texttt{lastModified} (temps) et \texttt{hashModified} (booléen), dont le fonctionnement est détaillé en question 10.
+Enfin, comme nous avons choisi d'implémenter l'extension qui remplace la date de dernière modification du fichier par un hash, les attributs \texttt{lastModified} (temps) et \texttt{hashModified} (booléen) sont ajoutés. Leur fonctionnement est détaillé en question 10.
 
 
-Cette structure est munie des fonctions permettant la création de règle (\texttt{createRegle}) et la suppression (\texttt{freeRegle}), en utilisant les fonctions \texttt{malloc} et \texttt{free}. Les autres fonctions permettent la gestion des dernières modifications et des hashs, et sont détaillées en question 10.
+Cette structure est munie des fonctions permettant la création de règle (\texttt{createRegle}) et la suppression (\texttt{freeRegle}), qui utilisent les fonctions \texttt{malloc} et \texttt{free}. Les autres fonctions permettent la gestion des dernières modifications et des hashs, et sont détaillées en question 10.
 
 \end{question}
 
 \begin{question} %% Question 3
 
-Nous définissons un module \textbf{listeRegles} qui permet de gérer les ensembles de règles. Comme le code nécessite de parcourir l'ensemble , nous décidons d'implémenter ces ensembles à l'aide de listes simplement chaînées.
-La structure \texttt{listeRegles} est donc le pointeur \texttt{NULL}, ou un couple (pointeur vers une \texttt{regle}, pointeur vers une \texttt{listeRegles}).
+Nous définissons un module \textbf{listeRegles} qui permet de gérer les ensembles de règles. Comme le code nécessite de parcourir l'ensemble, nous décidons d'implémenter ces ensembles à l'aide de listes simplement chaînées.
+
+Un élément de type \texttt{listeRegles} est donc le pointeur \texttt{NULL}, ou un couple (pointeur vers une \texttt{regle}, pointeur vers une \texttt{listeRegles}).
 
 La fonction \texttt{createListeRegle} crée un pointeur vers une liste vide de règles (le pointeur \texttt{NULL}), et \texttt{freeListeRegle} supprime la liste de règles, en itérant la fonction \texttt{freeRegle} sur chaque règle.
 
@@ -228,7 +225,7 @@ La fonction \texttt{addRegle} permet d'ajouter une \texttt{regle} à une \texttt
 
 La fonction \texttt{rechercheRegle} recherche une \texttt{regle} par son nom dans une \texttt{listeRegles}, et la renvoie si elle existe.
 
-La fonction \texttt{iterRegles} permet d'appliquer une fonction à tous les éléments d'une liste de type \texttt{listeRegles}. 
+La fonction \texttt{iterRegles} permet d'appliquer une fonction à tous les éléments d'une liste de type \texttt{listeRegles}. Elle prend en argument la liste sur laquelle on souhaite appliquer la fonction, la liste générale de règles qui sera passée en argument de la fonction, un pointeur vers la fonction à appliquer et un booléen permettant de décider comment gérer les potentielles règles \texttt{NULL}.
 
 La fonction \texttt{revListRegle} renvoie la liste renversée de celle donnée en argument.
 
@@ -240,11 +237,12 @@ Enfin, les fonctions \texttt{getLatestModify} et \texttt{childModified} ainsi qu
 
 \begin{question} %% Question 4
 
-Le fichier \textbf{Makefile} du projet est le suivant :
+Le fichier \textbf{Makefile} du projet est donné en figure \ref{mf:test_proj}.
 
 \begin{figure}[!h]
 \lstinputlisting{Makefile}
 \caption{Code source de \textbf{Makefile} de \texttt{myMake}}
+\label{mf:test_proj}
 \end{figure}
 \end{question}
 
@@ -252,7 +250,7 @@ Le fichier \textbf{Makefile} du projet est le suivant :
 
 Dans le fichier \textbf{main.c}, nous définissons une fonction \texttt{makefile2list}, qui prend en argument un pointeur vers un fichier \textbf{makefile} valide, et renvoie un pointeur vers une liste de règles représentant les règles définies dans le fichier.
 
-Son fonctionnement est décrit dans l'algorithme \ref{alg:cap}, page \pageref{alg:cap}.
+Son fonctionnement est décrit dans l'algorithme \ref{alg:cap}.
 
 \begin{algorithm}[!h]
 \caption{ $\quad$ \texttt{makefile2list}}
@@ -316,25 +314,17 @@ pour le stocker dans \texttt{token}. La chaîne source (ici \texttt{copyLigne}) 
 
 Pour la fonction \texttt{make\_naive}, nous avons adopté une approche récursive.
 \begin{itemize}
-	\item \underline{Cas de base} : les fichiers sources (\textbf{.c}) ainsi que les headers (\textbf{.h}) sont des fichiers qui ne nécessitent aucune compilation.
-	On peut alors directement finir l'exécution ici.
-	\item \underline{Cas général} : On utilise la fonction \texttt{createListeRegleFromPre} qui prend en argument la liste de règles qui a été créée lors de la lecture du \textbf{Makefile}, ainsi qu'une règle qui servira de "parent",
+	\item \emph{Cas de base :} les fichiers sources (\textbf{.c}) ainsi que les headers (\textbf{.h}) sont des fichiers qui ne nécessitent aucune compilation.
+	L'exécution termine alors ici.
+	\item \emph{Cas général :} La fonction \texttt{createListeRegleFromPre} est utilisée. Elle prend en argument la liste de règles qui a été créée lors de la lecture du \textbf{Makefile}, ainsi qu'une règle, qui servira de ``parent''
 	et renvoie une liste de règles constituée des prérequis de la règle passée en argument.
 
-	Cependant, en lisant uniquement les règles depuis la liste du \textbf{Makefile}, aucune règle concernant les fichiers \textbf{.h} et \textbf{.c} n'est renvoyée, puisque par définition ces extensions n'ont aucune règle associée.
+	Cependant, en lisant uniquement les règles depuis la liste du \textbf{Makefile}, aucune règle concernant les fichiers \textbf{.h} et \textbf{.c} n'est renvoyée, puisque par définition, ils n'ont aucune règle associée.
 
-	On introduit alors le concept de \underline{pseudo-règle}. Il s'agit d'une fausse règle représentant un tel fichier. Il n'est alors pas nécessaire d'initialiser certains attributs comme les prérequis ou les commandes puisqu'il n'y en a pas.
-	On crée donc de telles règles lors de l'exécution de \texttt{createListRegleFromPre}, et on prévoit de libérer la mémoire utilisée en même temps que celle prise par la liste retournée.
+	Nous introduisons alors le concept de \underline{pseudo-règle}. Il s'agit d'une ``fausse'' règle représentant un tel fichier en \textbf{.h} ou \textbf{.c}. Il n'est ainsi pas nécessaire d'initialiser certains attributs comme les prérequis ou les commandes comme il n'y en a pas.
+	Les pseudo-règles sont créées lors de l'exécution de \texttt{createListRegleFromPre}, et il est prévu de libérer la mémoire utilisée en même temps que celle utilisée par la liste de règles.
 
-	Une fois que l'on a construit la liste des prérequis, on effectue les appels récursifs à l'aide de la fonction \texttt{iterRegles} qui va appliquer la fonction \texttt{make\_naive} avec comme premier argument la liste générale de règles du \textbf{Makefile} à chaque prérequis.
-	La fonction \texttt{iterRegles} est une fonction plus générale qui applique une certaine fonction à tous les éléments de la liste un à un.
-	Elle prends en argument : 
-	\begin{itemize}
-		\item la liste sur laquelle on souhaite appliquer la fonction
-		\item la liste générale de règles qui sera passée en argument de la fonction particulière
-		\item un pointeur vers la fonction à appliquer
-		\item un booléen permettant de décider comment gérer les potentielles règles \texttt{NULL}
-	\end{itemize}
+	Une fois que la liste des prérequis est construite, des appels récursifs sont effectués à l'aide de la fonction \texttt{iterRegles}. Celle-ci applique la fonction \texttt{make\_naive} avec comme premier argument la liste générale de règles du \textbf{Makefile} à chaque prérequis.
 	La déclaration d'un pointeur vers une fonction est la suivante \cite{functionPointers} : 
 	\begin{center}
 		\texttt{type\_de\_retour  (*nom)(arg1, arg2,...)}. 
@@ -343,7 +333,7 @@ Pour la fonction \texttt{make\_naive}, nous avons adopté une approche récursiv
 
 	Après ces appels, on a donc construit récursivement les prérequis et l'on peut ensuite construire la règle elle-même.
 	
-	On libère ensuite la mémoire prise par la liste des prérequis construite ainsi que les pseudo-règles.
+	La mémoire prise par la liste des prérequis construite ainsi que par les pseudo-règles est ensuite libérée.
 \end{itemize}
 \end{question}
 
@@ -359,10 +349,10 @@ Si l'un des prérequis a été modifié après la règle considérée, cela sign
 \end{question}
 
 \begin{question} %% Question 8
-Dans la fonction \texttt{main}, on vérifie tout d'abord le nombre d'arguments fournis. Si aucun argument n'est fourni (à savoir \texttt{argc} = 1), la cible sera la première règle de la liste.
+Dans la fonction \texttt{main}, on vérifie tout d'abord le nombre d'arguments fournis. Si aucun argument n'est fourni (à savoir \texttt{argc} = 1), la cible par défaut est la première règle de la liste.
 Sinon, on recherche la règle associée au nom passé en argument et on applique la fonction de construction à cette règle.
 
-On libère ensuite la mémoire utilisée par nos ressources, en l'occurence les règles et la liste de règlee générale.
+On libère ensuite la mémoire utilisée par nos ressources, en l’occurrence les règles et la liste de règles générale.
 \end{question}
 
 \begin{question} %% Question 9
@@ -380,25 +370,27 @@ et crée les fichiers binaires. Réitérer la commande ne fait rien. Modifier \t
 \begin{verbatim}
 gcc -c c.c
 \end{verbatim}
-et crée un nouveau fichier \textbf{c}. Le programme se comporte comme attendu.
+et crée un nouveau fichier \textbf{c}. Le programme se comporte donc comme attendu.
 
-On obtient le même succès lorsque l'on tente \texttt{./mymake main} dans le dossier des fichiers source. On a donc décidé de l'ordre des compilations de \texttt{myMake} avec lui-même !
+On obtient le même succès lorsque l'on tente un \texttt{./mymake main} dans le dossier des fichiers source. On a ainsi décidé de l'ordre des compilations de \texttt{myMake} avec lui-même !
 
 \end{question}
 
-\begin{question} %% Question 10 = extensions
-	Nous avons décidé d'implémenter la méthode utilisant une fonction de hash pour vérifier s'il y a eu un changement depuis la dernière compilation.
+\begin{question} Nous avons décidé d'implémenter la méthode utilisant une fonction de hashage pour vérifier s'il y a eu un réel changement depuis la dernière compilation.
 
-	Après une première tentative peu fructueuse à l'aide d'une fonction de hashage plus simple où nous avons eu du mal à passer du hash d'une chaîne de caractère au hash d'un fichier entier, nous avons utilisé
-	une implémentation de SHA-256 en C\cite{hash}. La librairie est principalement composée de trois fonctions et une structure.
+	Après une première tentative peu fructueuse à l'aide d'une fonction de hashage simpliste, nous avons décidé d'utiliser
+	la fonction SHA-256 en C\cite{hash} via une librairie. Celle-ci est principalement composée de trois fonctions et d'une structure.
+	
+Nous ajoutons donc les fonctionnalités suivantes au projet :
+
 	\begin{itemize}
-		\item On initialise tout d'abord une structure qui sera utilisée par les algorithmes pour stocker les informations nécessaires au calcul du hash.
-		\item On lit le fichier \textbf{.hash} qui contient les hash calculés lors de la dernière exécution. On le lit par bloc de 64 bytes et l'on utilise la fonction \texttt{sha256\_update} pour hasher au fur et à mesure.
-		Nous avons choisi des blocs de 64 bytes à cause de l'implémentation de la fonction \texttt{sha256\_update} qui met à jour tout les 64 bytes la structure mais on pourrait utiliser cette fonction sans une lecture formatée ainsi.
-		\item Une fois que l'on a fini la lecture, on utilise \texttt{sha256\_final} pour calculer le hash de retour.
+		\item Une structure qui sera utilisée par les algorithmes pour stocker les informations nécessaires au calcul du hash.
+		\item Le fichier \textbf{.hash} contient les hash calculés lors de la dernière exécution. Lors d'une exécution, il est lu par bloc de 64 octets et la fonction \texttt{sha256\_update} hashe au fur et à mesure.
+		Ce choix de taille de blocs de 64 octets vient de l'implémentation de la fonction \texttt{sha256\_update}, qui met à jour les 64 octets la structure. On pourrait aussi utiliser cette fonction avec une lecture formatée différemment.
+		\item Une fois que l'on a fini la lecture, on utilise \texttt{sha256\_final} pour calculer le hash final.
 	\end{itemize}
 
-	Les hash calculés par la fonction SHA-256 sont de 32 bytes. Après les avoir calculés, on les stocke dans le fichier en un nombre hexadécimal de 64 chiffres avec avec \texttt{sprintf(..., "\%2x", ...)}
+	Les hash calculés par la fonction SHA-256 sont sur 32 octets. Après les avoir calculés, on les stocke dans le fichier sous forme hexadécimale à 64 chiffres avec \texttt{..., sprintf("\%2x", ...)}.
 
 \end{question}
 
