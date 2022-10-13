@@ -136,7 +136,7 @@ arc=0mm
 
 
 
-\title{MyMake}
+\title{myMake}
 \date{Octobre 2022}
 \author{Guilhem Repetto \and Jules Timmerman}
 
@@ -148,7 +148,7 @@ arc=0mm
 \begin{abstract}
 Lorsque l'on travaille sur un projet suffisamment complexe, il est pratique de séparer son code en plusieurs fichiers. Le compilateur doit alors compiler chaque fichier séparément, et regrouper différents fichiers binaires en un unique exécutable lors de la phase d'édition des liens. Lors d'une compilations, il est alors légitime de ne recompiler que les fichiers qui ont été modifiés depuis la compilation précédente. Une solution standard est de décrire les dépendance entre tous les fichiers source dans un fichier \textbf{makefile}, et d'utiliser un programme, \texttt{make}, qui se charge de lancer les compilations strictement nécessaires.
 
-L'objectif est de ce projet est de faire une implémentation en C de \texttt{make}. Nous implémenterons tout d'abord une fonction permettant la lecture du fichier de règles, ainsi que les structures nécessaires. Ensuite nous construirons notre programme selon les fonctionnalités imposées.
+L'objectif est de ce projet est de faire une implémentation en C d'une version minimaliste de \texttt{make}. Nous implémenterons d'abord une fonction permettant la lecture du fichier de règles. Ensuite nous construirons notre programme selon les spécifications imposées.
 
 \end{abstract}
 
@@ -361,6 +361,23 @@ On libère ensuite la mémoire utilisée par nos ressources, en l'occurence les 
 
 \begin{question} %% Question 9
 	
+La commande \texttt{./mymake main} dans le dossier test affiche
+\begin{verbatim}
+gcc -c d.c
+gcc -c c.c
+gcc -c b.c
+gcc -c a.c
+gcc -c main.c
+gcc -o main main.o a.o b.o c.o d.o
+\end{verbatim}
+et crée les fichiers binaires. Réitérer la commande ne fait rien. Modifier \textbf{c.h} et relancer la commande affiche
+\begin{verbatim}
+gcc -c c.c
+\end{verbatim}
+et crée un nouveau fichier \textbf{c}. Le programme se comporte comme attendu.
+
+On obtient le même succès lorsque l'on tente \texttt{./mymake main} dans le dossier des fichiers source. On a donc décidé de l'ordre des compilations de \texttt{myMake} avec lui-même !
+
 \end{question}
 
 \begin{question} %% Question 10 = extensions
