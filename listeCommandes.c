@@ -32,24 +32,6 @@ listeCommandes* addCommande(listeCommandes* list, char* c){
 	return retList;
 }
 
-/*
-listeCommandes* auxRevList(listeCommandes* list1, listeCommandes* list2){
-		if (list1 == NULL){
-			return list2;
-		}
-		else {
-			return (auxRevList (list1->next, addCommande(list2, list1->commande)));
-		}
-	}
-
-
-listeCommandes* revList(listeCommandes* list){
-	listeCommandes* init = createListeCommands();
-	listeCommandes* renverse = list;
-	return renverse;
-}
-*/
-
 listeCommandes* revListCommande(listeCommandes* list){
 	if (list == NULL){
 		return NULL;

@@ -71,7 +71,7 @@ regle* rechercheRegle(listeRegles* list, char* nom){
 }
 
 // Itère sur la fonction
-// si ignoreNULL = 1, on applique ignore les regles NULL
+// si ignoreNULL = 0, on applique la fonction aux règles NULL
 void iterRegles(listeRegles* regles, listeRegles* arg1, void (*func)(listeRegles*, regle*), int ignoreNULL){
 	if(regles == NULL){ // Cas d'arrêt : on est sur la liste vide
 		return;

@@ -106,7 +106,6 @@ listeRegles* makefile2list(FILE* makefile){
 
 
 
-// TODO : Optimisation sans iter ?
 // Q6 : version naive
 void make_naive(listeRegles* list, regle* regle){
 	if(isFile(regle->nom) == 1){ // Cas de base
@@ -122,7 +121,6 @@ void make_naive(listeRegles* list, regle* regle){
 }
 
 
-// TODO : idem Q6
 // Q7 : la bonne version 
 void make(listeRegles* list, regle* regle){
 	if(isFile(regle->nom) == 1){ // Cas de base

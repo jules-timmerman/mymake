@@ -142,7 +142,7 @@ void addHash(char* nom, char* prettyHash, FILE* f){
 
 // Renvoie int pour s'il y a eu une erreur
 // 0: pas de problème
-// 1: pb
+// 1: problème
 int hashFile(char* nom, unsigned char* hash){
 
 	FILE* f = fopen(nom, "rb"); // On lit en mode binaire ici
