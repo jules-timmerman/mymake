@@ -318,24 +318,30 @@ Pour la fonction \texttt{make\_naive}, nous avons adopté une approche récursiv
 \begin{itemize}
 	\item \underline{Cas de base} : les fichiers sources (\textbf{.c}) ainsi que les headers (\textbf{.h}) sont des fichiers qui ne nécessitent aucune compilation.
 	On peut alors directement finir l'exécution ici.
-	\item \underline{Cas général} : On utilise la fonction \texttt{createListeRegleFromPre} qui prend en argument la liste de règles qui a été créée lors de la lecture du \textbf{Makefile}, ainsi qu'une règle,
+	\item \underline{Cas général} : On utilise la fonction \texttt{createListeRegleFromPre} qui prend en argument la liste de règles qui a été créée lors de la lecture du \textbf{Makefile}, ainsi qu'une règle qui servira de "parent",
 	et renvoie une liste de règles constituée des prérequis de la règle passée en argument.
 
-	Cependant, en lisant uniquement les règles depuis la liste du \textbf{Makefile}, aucune règle concernant les fichiers \textbf{.h} et \textbf{.c} n'est renvoyée, puisque par définition ils n'ont aucune règle associée.
+	Cependant, en lisant uniquement les règles depuis la liste du \textbf{Makefile}, aucune règle concernant les fichiers \textbf{.h} et \textbf{.c} n'est renvoyée, puisque par définition ces extensions n'ont aucune règle associée.
 
 	On introduit alors le concept de \underline{pseudo-règle}. Il s'agit d'une fausse règle représentant un tel fichier. Il n'est alors pas nécessaire d'initialiser certains attributs comme les prérequis ou les commandes puisqu'il n'y en a pas.
 	On crée donc de telles règles lors de l'exécution de \texttt{createListRegleFromPre}, et on prévoit de libérer la mémoire utilisée en même temps que celle prise par la liste retournée.
 
 	Une fois que l'on a construit la liste des prérequis, on effectue les appels récursifs à l'aide de la fonction \texttt{iterRegles} qui va appliquer la fonction \texttt{make\_naive} avec comme premier argument la liste générale de règles du \textbf{Makefile} à chaque prérequis.
 	La fonction \texttt{iterRegles} est une fonction plus générale qui applique une certaine fonction à tous les éléments de la liste un à un.
-	Elle prends en argument la liste sur laquelle on souhaite appliquer la fonction, la liste générale de règles qui sera passée en argument de la fonction, un pointeur vers la fonction à appliquer et un booléen permettant de décider comment gérer les potentielles règles \texttt{NULL}.
+	Elle prends en argument : 
+	\begin{itemize}
+		\item la liste sur laquelle on souhaite appliquer la fonction
+		\item la liste générale de règles qui sera passée en argument de la fonction particulière
+		\item un pointeur vers la fonction à appliquer
+		\item un booléen permettant de décider comment gérer les potentielles règles \texttt{NULL}
+	\end{itemize}
 	La déclaration d'un pointeur vers une fonction est la suivante \cite{functionPointers} : 
 	\begin{center}
 		\texttt{type\_de\_retour  (*nom)(arg1, arg2,...)}. 
 	\end{center}
 	On peut alors passer une fonction en argument d'une autre fonction pour pouvoir l'appliquer et ainsi créer une fonction plus flexible. 
 
-	Après ces appels, on a donc construit récursivement les prérequis, et l'on peut ensuite construire la règle elle-même.
+	Après ces appels, on a donc construit récursivement les prérequis et l'on peut ensuite construire la règle elle-même.
 	
 	On libère ensuite la mémoire prise par la liste des prérequis construite ainsi que les pseudo-règles.
 \end{itemize}
@@ -344,19 +350,19 @@ Pour la fonction \texttt{make\_naive}, nous avons adopté une approche récursiv
 \begin{question} %% Question 7
 La fonction \texttt{make} est presque identique à la fonction \texttt{make\_naive}. On y ajoute une condition après les appels récursifs pour décider si l'on doit recompiler certains fichiers ou pas.
 
-On récupère la date de modification du fichier liée à la règle considérée, ainsi que la dernière date de modification des prérequis avec la fonction \texttt{getLatestModify}.
+On utilise la librairie \texttt{stat} pour récupérer la date de modification. On stockera le retour de \texttt{getLastModified} dans l'attribut \texttt{lastModified} d'une (pseudo-)règle. On l'initialisera dès la construction de l'objet  
 
-On utilise l'attribut \texttt{lastModified} de \texttt{regle} pour stocker ces dates. On l'initialise une première fois lors de la construction de la règle. On utilise la librairie \texttt{stat} pour récupérer les dates dans la fonction \texttt{getLastModified}.
+On récupère ensuite la dernière date de modification (c'est-à-dire le maximum de la liste) des prérequis à l'aide de la fonction \texttt{getLatestModified}.
 
-Si l'un des prérequis a été modifié après la règle considérée, cela signifie que le fichier lié n'est pas à jour : il nous faut donc le recompiler ; on exécute les commandes idoines. En plus d'exécuter les commandes, on change aussi la date de dernière modification pour permettre de recompiler en cascade lors de la remontée des appels récursifs.
+Si l'un des prérequis a été modifié après la règle considérée, cela signifie que le fichier lié n'est pas à jour : il nous faut donc le recompiler ; on exécute les commandes associée. On change aussi la date de dernière modification pour permettre de recompiler en cascade lors de la remontée des appels récursifs.
 
 \end{question}
 
 \begin{question} %% Question 8
-Dans la fonction \texttt{main}, on vérifie tout d'abord le nombre d'arguments fournis. Si aucun argument est fourni (à savoir \texttt{argc} = 1), la cible sera la première règle de la liste.
-Sinon, on recherche la règle associé au nom passé en argument et on applique la fonction de construction à cette règle.
+Dans la fonction \texttt{main}, on vérifie tout d'abord le nombre d'arguments fournis. Si aucun argument n'est fourni (à savoir \texttt{argc} = 1), la cible sera la première règle de la liste.
+Sinon, on recherche la règle associée au nom passé en argument et on applique la fonction de construction à cette règle.
 
-On libère ensuite la mémoire utilisée par nos ressources, en l'occurence les règles et la liste de règle générale.
+On libère ensuite la mémoire utilisée par nos ressources, en l'occurence les règles et la liste de règlee générale.
 \end{question}
 
 \begin{question} %% Question 9
@@ -383,8 +389,8 @@ On obtient le même succès lorsque l'on tente \texttt{./mymake main} dans le do
 \begin{question} %% Question 10 = extensions
 	Nous avons décidé d'implémenter la méthode utilisant une fonction de hash pour vérifier s'il y a eu un changement depuis la dernière compilation.
 
-	Après une première tentative peu fructueuse à l'aide d'une fonction de hashage plus simple, nous avons utilisé
-	une implémentation en SHA-256 en C\cite{hash}. La librairie est principalement composée de trois fonctions et une structure.
+	Après une première tentative peu fructueuse à l'aide d'une fonction de hashage plus simple où nous avons eu du mal à passer du hash d'une chaîne de caractère au hash d'un fichier entier, nous avons utilisé
+	une implémentation de SHA-256 en C\cite{hash}. La librairie est principalement composée de trois fonctions et une structure.
 	\begin{itemize}
 		\item On initialise tout d'abord une structure qui sera utilisée par les algorithmes pour stocker les informations nécessaires au calcul du hash.
 		\item On lit le fichier \textbf{.hash} qui contient les hash calculés lors de la dernière exécution. On le lit par bloc de 64 bytes et l'on utilise la fonction \texttt{sha256\_update} pour hasher au fur et à mesure.
@@ -392,7 +398,7 @@ On obtient le même succès lorsque l'on tente \texttt{./mymake main} dans le do
 		\item Une fois que l'on a fini la lecture, on utilise \texttt{sha256\_final} pour calculer le hash de retour.
 	\end{itemize}
 
-	Les hash calculés par la fonction SHA-256 sont de 32 bytes. Après les avoir calculés, on les stocke dans le fichier en un nombre hexadécimal de 64 chiffres avec avec \texttt{..., sprintf("\%2x", ...)}
+	Les hash calculés par la fonction SHA-256 sont de 32 bytes. Après les avoir calculés, on les stocke dans le fichier en un nombre hexadécimal de 64 chiffres avec avec \texttt{sprintf(..., "\%2x", ...)}
 
 \end{question}
 
