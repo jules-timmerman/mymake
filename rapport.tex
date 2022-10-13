@@ -146,10 +146,9 @@ arc=0mm
 \maketitle
 
 \begin{abstract}
-Ce projet consiste à faire une implémentation en C de l'application.
-Ce programme est un utilitaire permettant de faciliter la compilation d'un programme en spécifiant les différentes étapes intermédiaires par un système de règles décrit dans un fichier appelé \textbf{Makefile}.
-Nous implémenterons tout d'abord une fonction permettant la lecture du fichier de règle et la création des structures nécessaire. Ensuite nous construirons notre programme à l'aide des règles imposées.
-Implémenter nous-même ce logiciel nous permettra de comprendre son fonctionnement et son utilisation.
+Lorsque l'on travaille sur un projet suffisamment complexe, il est pratique de séparer son code en plusieurs fichiers. Le compilateur doit alors compiler chaque fichier séparément, et regrouper différents fichiers binaires en un unique exécutable lors de la phase d'édition des liens. Lors d'une compilations, il est alors légitime de ne recompiler que les fichiers qui ont été modifiés depuis la compilation précédente. Une solution standard est de décrire les dépendance entre tous les fichiers source dans un fichier \textbf{makefile}, et d'utiliser un programme, \texttt{make}, qui se charge de lancer les compilations strictement nécessaires.
+
+L'objectif est de ce projet est de faire une implémentation en C de \texttt{make}. Nous implémenterons tout d'abord une fonction permettant la lecture du fichier de règles, ainsi que les structures nécessaires. Ensuite nous construirons notre programme selon les fonctionnalités imposées.
 
 \end{abstract}
 
