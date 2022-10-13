@@ -12,7 +12,7 @@ listeRegles* makefile2list(FILE* makefile){
 	size_t tailleLigne_buffer = 0;
 	ssize_t tailleLigne = 0; // Taille de la ligne courante, en comptant \n
 	
-	int pushed = 1; // bool : vrai si dernière règle a été incluse dans liste de règles
+	int enregistre = 1; // bool : vrai si dernière règle a été incluse dans liste de règles
 	char *token;
 	regle* nouvelleRegle = NULL;
 	listeRegles* liste = createListeRegle();
@@ -21,15 +21,14 @@ listeRegles* makefile2list(FILE* makefile){
 
 	while(tailleLigne>=0){
 		if (tailleLigne == 1){	// Ligne vide
-			if (!pushed){ // On complète et ajoute la règle si ce n'est déjà fait (il peut y avoir plusieurs \n)
+			if (!enregistre){ // On complète et ajoute la règle si ce n'est déjà fait (il peut y avoir plusieurs \n)
 				nouvelleRegle->commandes = revListCommande(nouvelleListeCommandes); // Renversée -> ordre de lecture
 				liste = addRegle(liste, nouvelleRegle);
-				pushed = 1;
+				enregistre = 1;
 			}
-			else {}
 		}
 		else if (*ligne_buffer != 9) { // pas de tabulation -> nouvelle règle !
-			pushed = 0; // Cette règle n'est pas encore dans liste
+			enregistre = 0; // Cette règle n'est pas encore dans liste
 			
 			char* copyLigne = malloc(sizeof(char) * (strlen(ligne_buffer) + 1)); // On crée une copie car strtok change la chaîne et on veut faire 2 parcours
 			strcpy(copyLigne, ligne_buffer); // +1 pour le \0 à la fin
@@ -87,7 +86,7 @@ listeRegles* makefile2list(FILE* makefile){
 		tailleLigne = getline(&ligne_buffer, &tailleLigne_buffer, makefile); // Lecture nouvelle ligne
 	}
 
-	if (!pushed){ // Il reste peut-être une commande à ajouter à la liste
+	if (!enregistre){ // Il reste peut-être une commande à ajouter à la liste
 		nouvelleRegle->commandes = revListCommande(nouvelleListeCommandes);
 		liste = addRegle(liste, nouvelleRegle);
 	}

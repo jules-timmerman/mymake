@@ -18,6 +18,9 @@
 \usepackage{mathdots}
 \usepackage{comment}
 
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
 
 % Codes source
 \usepackage{listings}
@@ -69,7 +72,30 @@
 {â}{{\^{a}}}1
 {Â}{{\^{A}}}1
 {Î}{{\^{I}}}1
-} 
+}
+
+\renewcommand{\algorithmicrequire}{\textbf{Require:}}
+\renewcommand{\algorithmicensure}{\textbf{Ensure:}}
+\renewcommand{\algorithmicend}{\textbf{fin}}
+\renewcommand{\algorithmicif}{\textbf{si}}
+\renewcommand{\algorithmicthen}{\textbf{alors}}
+\renewcommand{\algorithmicelse}{\textbf{sinon}}
+\newcommand{\algorithmicelsif}{\algorithmicelse\ \algorithmicif}
+\newcommand{\algorithmicendif}{\algorithmicend\ \algorithmicif}
+\renewcommand{\algorithmicfor}{\textbf{pour}}
+\renewcommand{\algorithmicforall}{\textbf{pour tout}}
+\renewcommand{\algorithmicdo}{\textbf{faire}}
+\newcommand{\algorithmicendfor}{\algorithmicend\ \algorithmicfor}
+\renewcommand{\algorithmicwhile}{\textbf{tant que}}
+\newcommand{\algorithmicendwhile}{\algorithmicend\ \algorithmicwhile}
+\renewcommand{\algorithmicloop}{\textbf{loop}}
+\newcommand{\algorithmicendloop}{\algorithmicend\ \algorithmicloop}
+\renewcommand{\algorithmicrepeat}{\textbf{repeat}}
+\renewcommand{\algorithmicuntil}{\textbf{until}}
+\newcommand{\algorithmicprint}{\textbf{print}}
+\renewcommand{\algorithmicreturn}{\textbf{renvoyer}}
+\newcommand{\algorithmictrue}{\textbf{true}}
+\newcommand{\algorithmicfalse}{\textbf{false}}
 
 \lstset{style=mystyle}
 
@@ -216,22 +242,56 @@ Le fichier \textbf{Makefile} du projet est le suivant :
 
 Dans le fichier \texttt{main.c}, nous définissons une fonction \texttt{makefile2list}, qui prend en argument un pointeur vers un fichier \textbf{makefile} valide, et renvoie un pointeur vers une liste de règles représentant les règles définies dans le fichier.
 
-Son fonctionnement est le suivant :
+Son fonctionnement est décrit dans l'algorithme \ref{alg:cap}.
 
-\begin{enumerate}
-\item une liste vide de règles est créée
-\item la ligne courante du fichier est lue, elle est du type \texttt{nom : <listePrerequis>}. Une nouvelle règle vide est crée, où la fonction ajoute toutes les lignes suivantes non-vides, c'est-à-dire des lignes de type \texttt{<commande>}
-\item la première ligne vide rencontrée (constituée du seul caractère $\mathtt{\backslash n}$) lue, ou la fin du fichier, déclenche l'ajout de la règle courante dans la liste.
-\item Retour à l'étape 2
-\end{enumerate}
+\begin{algorithm}
+\caption{\texttt{makefile2list}}
+\label{alg:cap}
+\begin{algorithmic}
+\State L = \texttt{createListeRegles}
+\State R = \texttt{createRegle("", [], 0, [])}
+\State enregistré = \texttt{VRAI}
+\State ligne = première ligne de \textbf{makefile}
+\While{il reste des lignes à lire}
+\If{ligne est vide et enregistré = \texttt{FAUX}}
+	\State enregistré $\gets$ VRAI
+	\State R.commandes $\gets$ \texttt{revListCommande}(R.commandes)
+	\State L $\gets$ \texttt{addRegle(L,R)}
+	\State R $\gets$ \texttt{createRegle("", [], 0, [])}
+\ElsIf{ligne est de type \texttt{nom : <listePrerequis>}}
+	\State R.nom $\gets$ \texttt{nom}
+	\State R.prerequis $\gets$ \texttt{<listePrerequis>}
+	\State R.lenPrerequis $\gets$ |\texttt{<listePrerequis>}|
+\Else \Comment{ligne de type \texttt{<commande>}}
+    \State R.commandes $\gets$ \texttt{ligne::}R.commandes
+%\ElsIf{$N$ is odd}
+%    \State $y \gets y \times X$
+%    \State $N \gets N - 1$
+\EndIf
+\EndWhile
+\If{enregistré = \texttt{FAUX}}
+	\State R.commandes $\gets$ \texttt{revListCommande}(R.commandes)
+	\State L $\gets$ \texttt{addRegle(L,R);}
+\EndIf
 
+\Return L
+\end{algorithmic}
+\end{algorithm}
 
 La lecture s'effectue grâce à la fonction \texttt{getline}. Ainsi, la commande \begin{center}
 \texttt{tailleLigne = getline(\&ligne\_buffer, \&tailleLigne\_buffer, makefile)}
 \end{center}
 écrit la ligne courante du fichier \texttt{makefile} dans la chaîne \texttt{ligne\_buffer}, stocke sa longueur dans \texttt{taille\_ligne} (en comptant le retour à la ligne). La variable \texttt{tailleLigne\_buffer} ne sera pas utilisée ici.
 
-
+On peut scinder une chaîne de caractères avec la fonction \texttt{strtok}. Par exemple, la commande
+\begin{center}
+\texttt{token = strtok(copyLigne, ":");}
+\end{center}
+stocke dans la chaîne \texttt{token} les premiers caractères de \texttt{copyLigne} jusqu'à rencontrer un ``:'' (ce caractère ne sera pas inclus dans \texttt{token}). Ensuite, il suffit de faire
+\begin{center}
+\texttt{token = strtok(NULL, " ");}
+\end{center}
+pour stocker dans \texttt{token} la portion suivante de \texttt{copyLigne} jusqu'au prochain ``:''.
 
 
 \end{question}
