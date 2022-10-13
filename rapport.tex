@@ -1,4 +1,4 @@
-\documentclass[11pt]{report}
+\documentclass[11pt]{article}
 \usepackage[utf8]{inputenc}
 \usepackage[french]{babel}
 \usepackage[T1]{fontenc}
@@ -29,7 +29,7 @@
 \definecolor{codegreen}{rgb}{0,0.6,0.1}
 \definecolor{codegray}{rgb}{0.5,0.5,0.5}
 \definecolor{codepurple}{rgb}{0.58,0,0.82}
-\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+\definecolor{backcolour}{rgb}{0.8,0.8,0.8}
 
 \lstdefinestyle{mystyle}{
     backgroundcolor=\color{backcolour},   
@@ -97,6 +97,10 @@
 \newcommand{\algorithmictrue}{\textbf{true}}
 \newcommand{\algorithmicfalse}{\textbf{false}}
 
+\makeatletter
+\renewcommand*{\ALG@name}{Algorithme}
+\makeatother
+
 \lstset{style=mystyle}
 
 % Encadrés
@@ -148,6 +152,7 @@ arc=0mm
 
 
 \begin{question} %% Question 1
+
 Pour créer le fichier \textbf{Makefile}, il faut comprendre la dépendance entre les fichiers du projet.
 Nous voulons compiler un fichier exécutable \textbf{main} à partir du fichier \textbf{main.c}.
 
@@ -164,7 +169,7 @@ main: main.o a.o b.o c.o d.o
 Pour le reste, on construit alors un graphe de dépendance (voir figure \ref{fig:dependance_test}), où $\mathbf{x}\rightarrow \mathbf{y}$ signifie que le fichier \textbf{y} a besoin du fichier \textbf{x} pour être compilé.
 
 
-\begin{figure}[h]
+\begin{figure}[!h]
 \centering
 % https://tikzcd.yichuanshen.de/#N4Igdg9gJgpgziAXAbVABwnAlgFyxMJZABgBpiBdUkANwEMAbAVxiRAB12cYAPHf4FAB0AYwC+IMaXSZc+QijIBGKrUYs2nbnwHCAFhKkzseAkTIAmVfWatEHLr345gdUYekgMJ+edIBma3U7B21nVyEDSU9vOTNFUgAWINtNRx0XEXdo4ziFElIAVhSNey0nASyooy9ZU3yyADYSkPKM4AAjbJrY+r8Adha0sIEu6pi63xQLUhVqG1LQipdhCA9cvumAobL08Lc1nNqfeOQZ4vng4eXgLMOeydOZwcvU3ZGXLvuJk-zEpJ2S3aAFs6FgwOtjnkiP8rK9Fm1wqDwUJ7qoYFAAObwIigABmACcIMCkGQQDgIEgABw1QnEpBKagU6m0okkxAzcmUxAATlZ9MQ-iZ3L5njp7P+XIZxH57MKwulsqQjQViCUSiViH6qvVmqFUrVZIY4JCcAgxqgR3FSH1zMQVOoHRgYEtiBlYrZ1J1Fk1PO9mvV-o9AqUZLtSh9wfZSlt3Ij1D0MDorrATAYDE18oNMcdztd7vxnrVOv1TpdpLEFDEQA
 \begin{tikzcd}
@@ -200,29 +205,31 @@ Nous pouvons alors en déduire le fichier \textbf{Makefile} (figure \ref{code:ma
 
 \begin{question} %% Question 2
 
-Nous créons un module \textbf{regles.c}, où l'on définit une structure \texttt{regle}. Une \texttt{regle} contient un pointeur vers une chaîne \texttt{nom}, un pointeur vers un tableau \texttt{prerequis} qui représente l'ensemble des fichiers nécessaires pour compiler [\texttt{nom}]. Il y a aussi \texttt{lenPrerequis} la taille de ce tableau que nous stockons pour plus de simplicité dans le code. La liste des commandes à effectuer est stockée dans la liste (nous définissons les listes chaînées dans le module \textbf{listeRegles}) des \texttt{commandes}. Enfin, nous avons choisi d'implémenter l'extension qui remplace la date de dernière modification du fichier par un hash. Les attributs \texttt{lastModified} (temps) et \texttt{hashModified} (booléen) sont donc utilisés, et leur fonctionnement est détaillé en question 10.
+Nous créons un module \textbf{regles}, où l'on définit une structure \texttt{regle}. Une \texttt{regle} contient un pointeur vers une chaîne \texttt{nom}, un pointeur vers un tableau \texttt{prerequis} qui représente l'ensemble des fichiers nécessaires pour compiler [\texttt{nom}]. L'entier \texttt{lenPrerequis} représente la taille de ce tableau. La liste des commandes à effectuer est stockée dans la liste (nous définissons les listes chaînées dans le module \textbf{listeRegles}) des \texttt{commandes}.
+
+Enfin, comme nous avons choisi d'implémenter l'extension qui remplace la date de dernière modification du fichier par un hash, on ajoute les attributs \texttt{lastModified} (temps) et \texttt{hashModified} (booléen), dont le fonctionnement est détaillé en question 10.
 
 
-Cette structure est munie des fonctions permettant la création de règle (\texttt{createRegle}) et la suppression (\texttt{freeRegle}). Les autres fonctions permettent la gestion des dernières modifications et des hashs, et sont détaillées en question 10.
+Cette structure est munie des fonctions permettant la création de règle (\texttt{createRegle}) et la suppression (\texttt{freeRegle}), en utilisant les fonctions \texttt{malloc} et \texttt{free}. Les autres fonctions permettent la gestion des dernières modifications et des hashs, et sont détaillées en question 10.
 
 \end{question}
 
 \begin{question} %% Question 3
 
-Nous définissons un module \textbf{listeRegles.c} qui permet de gérer les ensembles de règles. Comme le code nécessite de parcourir l'ensemble , nous décidons d'implémenter ces ensembles à l'aide de listes simplement chaînées.
+Nous définissons un module \textbf{listeRegles} qui permet de gérer les ensembles de règles. Comme le code nécessite de parcourir l'ensemble , nous décidons d'implémenter ces ensembles à l'aide de listes simplement chaînées.
 La structure \texttt{listeRegles} est donc le pointeur \texttt{NULL}, ou un couple (pointeur vers une \texttt{regle}, pointeur vers une \texttt{listeRegles}).
 
-Les fonctions \texttt{createListeRegle} et \texttt{freeListeRegle} permettent la création et la suppression d'une \texttt{listeRegles}.
+La fonction \texttt{createListeRegle} crée un pointeur vers une liste vide de règles (le pointeur \texttt{NULL}), et \texttt{freeListeRegle} supprime la liste de règles, en itérant la fonction \texttt{freeRegle} sur chaque règle.
 
 La fonction \texttt{addRegle} permet d'ajouter une \texttt{regle} à une \texttt{listeRegles}, via un ajout à la tête.
 
 La fonction \texttt{rechercheRegle} recherche une \texttt{regle} par son nom dans une \texttt{listeRegles}, et la renvoie si elle existe.
 
-La fonction \texttt{iterRegles} permet d'appliquer une fonction à tous les éléments d'une \texttt{listeRegles}. 
+La fonction \texttt{iterRegles} permet d'appliquer une fonction à tous les éléments d'une liste de type \texttt{listeRegles}. 
 
 La fonction \texttt{revListRegle} renvoie la liste renversée de celle donnée en argument.
 
-Enfin, les fonctions \texttt{getLatestModify} et \texttt{childModified} seront détaillées en question 10.
+Enfin, les fonctions \texttt{getLatestModify} et \texttt{childModified} ainsi que quelques détails seront traités en question 10.
 
 
 
@@ -232,7 +239,7 @@ Enfin, les fonctions \texttt{getLatestModify} et \texttt{childModified} seront d
 
 Le fichier \textbf{Makefile} du projet est le suivant :
 
-\begin{figure}[h]
+\begin{figure}[!h]
 \lstinputlisting{Makefile}
 \caption{Code source de \textbf{Makefile} de \texttt{myMake}}
 \end{figure}
@@ -240,90 +247,98 @@ Le fichier \textbf{Makefile} du projet est le suivant :
 
 \begin{question} %% Question 5
 
-Dans le fichier \texttt{main.c}, nous définissons une fonction \texttt{makefile2list}, qui prend en argument un pointeur vers un fichier \textbf{makefile} valide, et renvoie un pointeur vers une liste de règles représentant les règles définies dans le fichier.
+Dans le fichier \textbf{main.c}, nous définissons une fonction \texttt{makefile2list}, qui prend en argument un pointeur vers un fichier \textbf{makefile} valide, et renvoie un pointeur vers une liste de règles représentant les règles définies dans le fichier.
 
-Son fonctionnement est décrit dans l'algorithme \ref{alg:cap}.
+Son fonctionnement est décrit dans l'algorithme \ref{alg:cap}, page \pageref{alg:cap}.
 
-\begin{algorithm}
-\caption{\texttt{makefile2list}}
+\begin{algorithm}[!h]
+\caption{ $\quad$ \texttt{makefile2list}}
 \label{alg:cap}
 \begin{algorithmic}
-\State L = \texttt{createListeRegles}
-\State R = \texttt{createRegle("", [], 0, [])}
-\State enregistré = \texttt{VRAI}
-\State ligne = première ligne de \textbf{makefile}
-\While{il reste des lignes à lire}
-\If{ligne est vide et enregistré = \texttt{FAUX}}
-	\State enregistré $\gets$ VRAI
-	\State R.commandes $\gets$ \texttt{revListCommande}(R.commandes)
-	\State L $\gets$ \texttt{addRegle(L,R)}
-	\State R $\gets$ \texttt{createRegle("", [], 0, [])}
-\ElsIf{ligne est de type \texttt{nom : <listePrerequis>}}
-	\State R.nom $\gets$ \texttt{nom}
-	\State R.prerequis $\gets$ \texttt{<listePrerequis>}
-	\State R.lenPrerequis $\gets$ |\texttt{<listePrerequis>}|
-\Else \Comment{ligne de type \texttt{<commande>}}
-    \State R.commandes $\gets$ \texttt{ligne::}R.commandes
-%\ElsIf{$N$ is odd}
-%    \State $y \gets y \times X$
-%    \State $N \gets N - 1$
+\State \texttt{L} = \texttt{createListeRegles}
+\State \texttt{R} = \texttt{createRegle("", [], 0, [])}
+\State \texttt{enregistré} = \texttt{VRAI}
+\State \texttt{ligne} = première ligne de \emph{makefile}
+\While{il reste des lignes à lire dans \emph{makefile}}
+\If{\texttt{ligne = []} \textbf{et} enregistré = \texttt{FAUX}}
+	\State \texttt{enregistré} $\gets$ \texttt{VRAI}
+	\State \texttt{R.commandes} $\gets$ \texttt{revListCommande(R.commandes)}
+	\State \texttt{L} $\gets$ \texttt{addRegle(L,R)}
+	\State \texttt{R} $\gets$ \texttt{createRegle("", [], 0, [])}
+\ElsIf{\texttt{ligne} est de type \texttt{nom : <listePrerequis>}}
+	\State \texttt{enregistré} = \texttt{FAUX}
+	\State \texttt{R.nom} $\gets$ \texttt{nom}
+	\State \texttt{R.prerequis} $\gets$ \texttt{<listePrerequis>}
+	\State \texttt{R.lenPrerequis} $\gets$ |\texttt{<listePrerequis>}|
+\ElsIf{\texttt{ligne} de type \texttt{<commande>}}
+	\State \texttt{R.commandes} $\gets$ \texttt{ligne::R.commandes}
+\Else \Comment{Saut de ligne supplémentaire}
+    \State ()
 \EndIf
 \EndWhile
-\If{enregistré = \texttt{FAUX}}
-	\State R.commandes $\gets$ \texttt{revListCommande}(R.commandes)
-	\State L $\gets$ \texttt{addRegle(L,R);}
+\If{\texttt{enregistré} = \texttt{FAUX}}
+	\State \texttt{R.commandes} $\gets$ \texttt{revListCommande(R.commandes)}
+	\State \texttt{L} $\gets$ \texttt{addRegle(L,R)}
 \EndIf
 
 \Return L
 \end{algorithmic}
 \end{algorithm}
 
-La lecture s'effectue grâce à la fonction \texttt{getline}. Ainsi, la commande \begin{center}
+
+
+
+La lecture de chaque ligne s'effectue grâce à la fonction \texttt{getline} \cite{getline}. Ainsi, la commande \begin{center}
 \texttt{tailleLigne = getline(\&ligne\_buffer, \&tailleLigne\_buffer, makefile)}
 \end{center}
-écrit la ligne courante du fichier \texttt{makefile} dans la chaîne \texttt{ligne\_buffer}, stocke sa longueur dans \texttt{taille\_ligne} (en comptant le retour à la ligne). La variable \texttt{tailleLigne\_buffer} ne sera pas utilisée ici.
+copie la ligne courante du fichier \texttt{makefile} dans la chaîne \texttt{ligne\_buffer}, stocke sa longueur dans \texttt{taille\_ligne} (en comptant le retour à la ligne). La variable \texttt{tailleLigne\_buffer} n'est pas utilisée ici.
 
-On peut scinder une chaîne de caractères avec la fonction \texttt{strtok}. Par exemple, la commande
+
+On détecte si une ligne est de type \texttt{nom : <listePrerequis>}, \texttt{<commandes>} ou \texttt{<$\backslash\!\!$ n>} en mesurant sa longueur. Si la longueur est 1, alors la ligne est un saut de ligne. Sinon, les lignes de commandes commencent par une tabulation.
+
+On scinde la chaîne de caractères de type \texttt{nom : <listePrerequis>} avec la fonction \texttt{strtok} \cite{strtok}. Par exemple, la commande
 \begin{center}
 \texttt{token = strtok(copyLigne, ":");}
 \end{center}
-stocke dans la chaîne \texttt{token} les premiers caractères de \texttt{copyLigne} jusqu'à rencontrer un ``:'' (ce caractère ne sera pas inclus dans \texttt{token}). Ensuite, il suffit de faire
+stocke dans la chaîne \texttt{token} les premiers caractères de \texttt{copyLigne} jusqu'à rencontrer un ``:'' (ce caractère ne sera pas inclus dans \texttt{token}). Pour obtenir le bloc suivant, il suffit de faire
 \begin{center}
 \texttt{token = strtok(NULL, " ");}
 \end{center}
-pour stocker dans \texttt{token} la portion suivante de \texttt{copyLigne} jusqu'au prochain ``:''.
+pour le stocker dans \texttt{token}. La chaîne source (ici \texttt{copyLigne}) est implicite.
 
 
 \end{question}
 
 \begin{question} %% Question 6
+
 Pour la fonction \texttt{make\_naive}, nous avons adopté une approche récursive.
 \begin{itemize}
 	\item \underline{Cas de base} : les fichiers sources (\textbf{.c}) ainsi que les headers (\textbf{.h}) sont des fichiers qui ne nécessitent aucune compilation.
 	On peut alors directement finir l'exécution ici.
-	\item \underline{Cas général} : On utilise la fonction \texttt{createListeRegleFromPre} qui prend en argument la liste de règle qui a été créée lors de la lecture du \textbf{Makefile} ainsi qu'une règle
-	et renvoie une liste de règle constituée des prérequis de la règle passée en argument.
+	\item \underline{Cas général} : On utilise la fonction \texttt{createListeRegleFromPre} qui prend en argument la liste de règles qui a été créée lors de la lecture du \textbf{Makefile}, ainsi qu'une règle,
+	et renvoie une liste de règles constituée des prérequis de la règle passée en argument.
 
-	Cependant, en lisant uniquement les règles depuis la liste du \textbf{Makefile}, on a alors aucune règle dans la liste renvoyée qui représente les fichiers \textbf{.h} et \textbf{.c} puisqu'ils n'ont aucune règle associée.
+	Cependant, en lisant uniquement les règles depuis la liste du \textbf{Makefile}, aucune règle concernant les fichiers \textbf{.h} et \textbf{.c} n'est renvoyée, puisque par définition ils n'ont aucune règle associée.
 
 	On introduit alors le concept de \underline{pseudo-règle}. Il s'agit d'une fausse règle représentant un tel fichier. Il n'est alors pas nécessaire d'initialiser certains attributs comme les prérequis ou les commandes puisqu'il n'y en a pas.
-	On crée donc de tels règles lors de l'exécution de \texttt{createListRegleFromPre} et on libérera la mémoire utilisée en même temps que celle de la liste retournée.
+	On crée donc de telles règles lors de l'exécution de \texttt{createListRegleFromPre}, et on prévoit de libérer la mémoire utilisée en même temps que celle prise par la liste retournée.
 
 	Une fois que l'on a construit la liste des prérequis, on effectue les appels récursifs à l'aide de la fonction \texttt{iterRegles} qui va appliquer la fonction \texttt{make\_naive} avec comme premier argument la liste générale de règles du \textbf{Makefile} à chaque prérequis.
 
-	Après ces appels, on a donc construit nos récursivement les prérequis et l'on peut ensuite construire la règle elle-même.
+	Après ces appels, on a donc construit récursivement les prérequis, et l'on peut ensuite construire la règle elle-même.
 	
 	On libère ensuite la mémoire prise par la liste des prérequis construite ainsi que les pseudo-règles.
 \end{itemize}
 \end{question}
 
 \begin{question} %% Question 7
-La fonction \texttt{make} est presque identique à la fonction \texttt{make\_naive}. On rajoute une condition après nos appels récursifs pour estimer si l'on doit recompiler ou pas.
+La fonction \texttt{make} est presque identique à la fonction \texttt{make\_naive}. On y ajoute une condition après les appels récursifs pour décider si l'on doit recompiler certains fichiers ou pas.
 
-On récupère la date de modification du fichier liée à la règle considérée ainsi que la dernière date de modification des prérequis avec la fonction \texttt{getLatestModify}.
+On récupère la date de modification du fichier liée à la règle considérée, ainsi que la dernière date de modification des prérequis avec la fonction \texttt{getLatestModify}.
+
 On utilise l'attribut \texttt{lastModified} de \texttt{regle} pour stocker ces dates. On l'initialise une première fois lors de la construction de la règle. On utilise la librairie \texttt{stat} pour récupérer les dates dans la fonction \texttt{getLastModified}.
 
-Si un des prérequis a été modifié après la règle considérée, cela signifie que le fichier lié n'est pas à jour : il nous faut donc le recompiler et on exécute les commandes. En plus d'exécuter les commandes, on change aussi la date de dernière modification pour permettre de recompiler en cascade lors de la remontée des appels récursifs.
+Si l'un des prérequis a été modifié après la règle considérée, cela signifie que le fichier lié n'est pas à jour : il nous faut donc le recompiler ; on exécute les commandes idoines. En plus d'exécuter les commandes, on change aussi la date de dernière modification pour permettre de recompiler en cascade lors de la remontée des appels récursifs.
 
 \end{question}
 
@@ -340,8 +355,8 @@ Si un des prérequis a été modifié après la règle considérée, cela signif
   08/10/22.
 
   \bibitem{strtok}
-  \textit{C library function - strtok()},
-  \texttt{tutorialspoint.com/c\_standard\_library/c\_function\_strtok.htm},
+  \textit{C library function-strtok()},
+  \texttt{\\tutorialspoint.com/c\_standard\_library/c\_function\_strtok.htm},
   08/10/22.
   
   \bibitem{hash}
