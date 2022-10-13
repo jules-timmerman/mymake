@@ -237,10 +237,33 @@ La lecture s'effectue grâce à la fonction \texttt{getline}. Ainsi, la commande
 \end{question}
 
 \begin{question} %% Question 6
+Pour la fonction \texttt{make\_naive}, nous avons adopté une approche récursive.
+\begin{itemize}
+	\item \underline{Cas de base} : les fichiers sources (\textbf{.c}) ainsi que les headers (\textbf{.h}) sont des fichiers qui ne nécessitent aucune compilation.
+	On peut alors directement finir l'exécution ici.
+	\item \underline{Cas général} : On utilise la fonction \texttt{createListeRegleFromPre} qui prend en argument la liste de règle qui a été créée lors de la lecture du \textbf{Makefile} ainsi qu'une règle
+	et renvoie une liste de règle constituée des prérequis de la règle passée en argument.
 
+	Cependant, en lisant uniquement les règles depuis la liste du \textbf{Makefile}, on a alors aucune règle dans la liste renvoyée qui représente les fichiers \textbf{.h} et \textbf{.c} puisqu'ils n'ont aucune règle associée.
+
+	On introduit alors le concept de \underline{pseudo-règle}. Il s'agit d'une fausse règle représentant un tel fichier. Il n'est alors pas nécessaire d'initialiser certains attributs comme les prérequis ou les commandes puisqu'il n'y en a pas.
+	On crée donc de tels règles lors de l'exécution de \texttt{createListRegleFromPre} et on libérera la mémoire utilisée en même temps que celle de la liste retournée.
+
+	Une fois que l'on a construit la liste des prérequis, on effectue les appels récursifs à l'aide de la fonction \texttt{iterRegles} qui va appliquer la fonction \texttt{make\_naive} avec comme premier argument la liste générale de règles du \textbf{Makefile} à chaque prérequis.
+
+	Après ces appels, on a donc construit nos récursivement les prérequis et l'on peut ensuite construire la règle elle-même.
+	
+	On libère ensuite la mémoire prise par la liste des prérequis construite ainsi que les pseudo-règles.
+\end{itemize}
 \end{question}
 
 \begin{question} %% Question 7
+La fonction \texttt{make} est presque identique à la fonction \texttt{make\_naive}. On rajoute une condition après nos appels récursifs pour estimer si l'on doit recompiler ou pas.
+
+On récupère la date de modification du fichier liée à la règle considérée ainsi que la dernière date de modification des prérequis avec la fonction \texttt{getLatestModify}.
+On utilise l'attribut \texttt{lastModified} de \texttt{regle} pour stocker ces dates. On l'initialise une première fois lors de la construction de la règle. On utilise la librairie \texttt{stat} pour récupérer les dates dans la fonction \texttt{getLastModified}.
+
+Si un des prérequis a été modifié après la règle considérée, cela signifie que le fichier lié n'est pas à jour : il nous faut donc le recompiler et on exécute les commandes. En plus d'exécuter les commandes, on change aussi la date de dernière modification pour permettre de recompiler en cascade lors de la remontée des appels récursifs.
 
 \end{question}
 
