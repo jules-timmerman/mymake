@@ -12,7 +12,7 @@ listeRegles* makefile2list(FILE* makefile){
 	size_t tailleLigne_buffer = 0;
 	ssize_t tailleLigne = 0; // Taille de la ligne courante, en comptant \n
 	
-	int pushed = 1; // bool : 1 si dernière règle a été incluse dans liste de règles
+	int pushed = 1; // bool : vrai si dernière règle a été incluse dans liste de règles
 	char *token;
 	regle* nouvelleRegle = NULL;
 	listeRegles* liste = createListeRegle();
@@ -87,7 +87,7 @@ listeRegles* makefile2list(FILE* makefile){
 		tailleLigne = getline(&ligne_buffer, &tailleLigne_buffer, makefile); // Lecture nouvelle ligne
 	}
 
-	if (!pushed){ // Il reste probablement une commande à ajouter à la liste
+	if (!pushed){ // Il reste peut-être une commande à ajouter à la liste
 		nouvelleRegle->commandes = revListCommande(nouvelleListeCommandes);
 		liste = addRegle(liste, nouvelleRegle);
 	}
@@ -99,6 +99,12 @@ listeRegles* makefile2list(FILE* makefile){
 
 	return liste;
 }
+
+
+
+
+
+
 
 
 // TODO : Optimisation sans iter ?
