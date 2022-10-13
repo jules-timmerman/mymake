@@ -155,7 +155,6 @@ L'objectif de ce projet est de faire une implémentation en C d'une version mini
 
 
 \begin{question} %% Question 1
-
 Pour créer le fichier \textbf{Makefile}, il faut comprendre la dépendance entre les fichiers du projet.
 
 Nous voulons compiler un fichier exécutable \textbf{main} à partir du fichier \textbf{main.c}. Tout d'abord, rappelons qu'au minimum, le fichier \textbf{main.c} est transformé par le préprocesseur en un fichier \textbf{main.i}, compilé en un fichier assembleur \textbf{main.s}, puis en un fichier binaire \textbf{main.o}. Enfin, l'étape d'édition des liens utilise \textbf{main.o} ainsi que tous les fichiers binaires (en \textbf{.o}) des bibliothèques et des fichiers annexes déclarés dans le \textit{header} de \textbf{main.c} (fichiers en \textbf{.h}) pour produire un fichier final exécutable \textbf{main}.
@@ -203,7 +202,6 @@ Nous pouvons alors en déduire le fichier \textbf{Makefile} (figure \ref{code:ma
 
 
 \begin{question} %% Question 2
-
 Nous créons un module \textbf{regles}, où nous définissons une structure \texttt{regle}. Une \texttt{regle} contient un pointeur vers une chaîne \texttt{nom}, un pointeur vers un tableau \texttt{prerequis} qui représente l'ensemble des fichiers nécessaires pour compiler [\texttt{nom}]. L'entier \texttt{lenPrerequis} représente la taille de ce tableau. La liste des commandes à effectuer est stockée dans la liste (nous définissons les listes chaînées dans le module \textbf{listeRegles}) des \texttt{commandes}.
 
 Enfin, comme nous avons choisi d'implémenter l'extension qui remplace la date de dernière modification du fichier par un hash, les attributs \texttt{lastModified} (temps) et \texttt{hashModified} (booléen) sont ajoutés. Leur fonctionnement est détaillé en question 10.
@@ -214,7 +212,6 @@ Cette structure est munie des fonctions permettant la création de règle (\text
 \end{question}
 
 \begin{question} %% Question 3
-
 Nous définissons un module \textbf{listeRegles} qui permet de gérer les ensembles de règles. Comme le code nécessite de parcourir l'ensemble, nous décidons d'implémenter ces ensembles à l'aide de listes simplement chaînées.
 
 Un élément de type \texttt{listeRegles} est donc le pointeur \texttt{NULL}, ou un couple (pointeur vers une \texttt{regle}, pointeur vers une \texttt{listeRegles}).
@@ -236,7 +233,6 @@ Enfin, les fonctions \texttt{getLatestModify} et \texttt{childModified} ainsi qu
 \end{question}
 
 \begin{question} %% Question 4
-
 Le fichier \textbf{Makefile} du projet est donné en figure \ref{mf:test_proj}.
 
 \begin{figure}[!h]
@@ -247,7 +243,6 @@ Le fichier \textbf{Makefile} du projet est donné en figure \ref{mf:test_proj}.
 \end{question}
 
 \begin{question} %% Question 5
-
 Dans le fichier \textbf{main.c}, nous définissons une fonction \texttt{makefile2list}, qui prend en argument un pointeur vers un fichier \textbf{makefile} valide, et renvoie un pointeur vers une liste de règles représentant les règles définies dans le fichier.
 
 Son fonctionnement est décrit dans l'algorithme \ref{alg:cap}.
@@ -311,7 +306,6 @@ pour le stocker dans \texttt{token}. La chaîne source (ici \texttt{copyLigne}) 
 \end{question}
 
 \begin{question} %% Question 6
-
 Pour la fonction \texttt{make\_naive}, nous avons adopté une approche récursive.
 \begin{itemize}
 	\item \emph{Cas de base :} les fichiers sources (\textbf{.c}) ainsi que les headers (\textbf{.h}) sont des fichiers qui ne nécessitent aucune compilation.
@@ -356,7 +350,6 @@ On libère ensuite la mémoire utilisée par nos ressources, en l’occurrence l
 \end{question}
 
 \begin{question} %% Question 9
-	
 La commande \texttt{./mymake main} dans le dossier test affiche
 \begin{verbatim}
 gcc -c d.c
@@ -376,7 +369,8 @@ On obtient le même succès lorsque l'on tente un \texttt{./mymake main} dans le
 
 \end{question}
 
-\begin{question} Nous avons décidé d'implémenter la méthode utilisant une fonction de hashage pour vérifier s'il y a eu un réel changement depuis la dernière compilation.
+\begin{question} % Question 10
+Nous avons décidé d'implémenter la méthode utilisant une fonction de hashage pour vérifier s'il y a eu un réel changement depuis la dernière compilation.
 
 	Après une première tentative peu fructueuse à l'aide d'une fonction de hashage simpliste, nous avons décidé d'utiliser
 	la fonction SHA-256 en C\cite{hash} via une librairie. Celle-ci est principalement composée de trois fonctions et d'une structure.
@@ -395,8 +389,7 @@ Nous ajoutons donc les fonctionnalités suivantes au projet :
 \end{question}
 
 
-% A rajouter à terme :
-% Pointeurs de fonctions en C
+\newpage
 
 \begin{thebibliography}{99}
   \bibitem{getline}
