@@ -148,7 +148,7 @@ arc=0mm
 \begin{abstract}
 Lorsque l'on travaille sur un projet suffisamment complexe, il est pratique de séparer son code en plusieurs fichiers. Le compilateur doit alors compiler chaque fichier séparément, et regrouper les différents fichiers binaires en un unique exécutable lors de la phase d'édition des liens. Lors d'une compilation, il est ainsi légitime de ne recompiler que les fichiers qui ont été modifiés depuis la compilation précédente. Une solution standard est de décrire les dépendances entre tous les fichiers source dans un fichier nommé \textbf{makefile}, et d'utiliser un programme, \texttt{make}, qui se charge de lancer les compilations strictement nécessaires.
 
-L'objectif de ce projet est de faire une implémentation en C d'une version minimaliste de \texttt{make}. Nous implémenterons d'abord une fonction permettant la lecture du fichier \textbf{makefile}. Ensuite, nous construirons notre programme selon les spécifications imposées.
+L'objectif de ce projet est d'implémenter une version minimaliste de \texttt{make} en langage C. Nous écrirons d'abord une fonction permettant la lecture d'un fichier \textbf{makefile}. Nous construirons ensuite notre programme selon les spécifications imposées.
 
 \end{abstract}
 
@@ -191,7 +191,7 @@ Nous pouvons alors en déduire le fichier \textbf{Makefile} (figure \ref{code:ma
 
 
 
-\begin{figure}[h]
+\begin{figure}[!h]
 \lstinputlisting[language=c]{ testproj/Makefile }
 \caption{Code source de \textbf{Makefile} du projet de test}
 \label{code:makefile_test}
@@ -359,11 +359,11 @@ gcc -c a.c
 gcc -c main.c
 gcc -o main main.o a.o b.o c.o d.o
 \end{verbatim}
-et crée les fichiers binaires. Réitérer la commande ne fait rien. Modifier \textbf{c.h} et relancer la commande affiche
+et crée les fichiers binaires. Réitérer la commande ne fait rien. Modifier \textbf{a.h} et relancer la commande affiche
 \begin{verbatim}
-gcc -c c.c
+gcc -c a.c
 \end{verbatim}
-et crée un nouveau fichier \textbf{c}. Le programme se comporte donc comme attendu.
+et crée un nouveau fichier \textbf{a}. Le programme se comporte donc comme attendu.
 
 On obtient le même succès lorsque l'on tente un \texttt{./mymake main} dans le dossier des fichiers source. On a ainsi décidé de l'ordre des compilations de \texttt{myMake} avec lui-même !
 
